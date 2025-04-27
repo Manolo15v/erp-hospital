@@ -24,6 +24,16 @@ Cada Router va a contener una parte de la api (el backend) y cada router va esta
 
 //Inventario
 
+import almacenRoutes from "./Inventario/routes/almacen.routes.js"
+import equiposRoutes from "./Inventario/routes/equipos.routes.js"
+import modeloEquiposRoutes from "./Inventario/routes/modelosEquipos.routes.js";
+import modeloProductosRoutes from "./Inventario/routes/modelosProductos.routes.js";
+import instrumentoRoutes from "./Inventario/routes/Instrumentos.routes.js";
+import instrumentoUbicacionRoutes from "./Inventario/routes/instrumentosUbicacion.routes.js";
+import productosRoutes from "./Inventario/routes/productos.routes.js";
+import productosUbicacionRoutes from "./Inventario/routes/productosUbicacion.routes.js";
+import repuestosRoutes from "./Inventario/routes/repuestos.routes.js"
+
 //Laboratorio
 
 //Mantenimiento
@@ -71,6 +81,16 @@ app.use(stc("public"));
 //Hospitalizacion
 
 //Inventario
+
+app.use("/api/inventario/almacen", almacenRoutes);
+app.use("/api/inventario/equipos", equiposRoutes);
+app.use("/api/inventario/modeloEquipos", modeloEquiposRoutes);
+app.use("/api/inventario/instrumento", instrumentoRoutes);
+app.use("/api/inventario/instrumentoUbicacion", instrumentoUbicacionRoutes);
+app.use("/api/inventario/productos", productosRoutes);
+app.use("/api/inventario/modeloProductos", modeloProductosRoutes);
+app.use("/api/inventario/productosUbicacion", productosUbicacionRoutes);
+app.use("/api/inventario/repuestos", repuestosRoutes);
 
 //Laboratorio
 

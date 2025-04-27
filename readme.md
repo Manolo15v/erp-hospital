@@ -6,7 +6,7 @@ Sigue los pasos a continuación para configurar y ejecutar el proyecto:
 
 1. **Clonar el Repositorio**
     ```bash
-    git clone <URL_DEL_REPOSITORIO>
+    git clone https://github.com/Manolo15v/erp-hospital
     cd erp-hospital
     ```
 
