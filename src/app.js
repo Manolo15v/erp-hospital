@@ -22,6 +22,9 @@ Cada Router va a contener una parte de la api (el backend) y cada router va esta
 
 //Hospitalizacion
 
+import camasRoutes from "./Hospitalizacion/routes/camas.routes.js";
+
+
 //Inventario
 
 import almacenRoutes from "./Inventario/routes/almacen.routes.js"
@@ -79,6 +82,8 @@ app.use(stc("public"));
 //Consultas Odontologicas
 
 //Hospitalizacion
+
+app.use("/api/hospitalizacion/camas", camasRoutes);
 
 //Inventario
 
