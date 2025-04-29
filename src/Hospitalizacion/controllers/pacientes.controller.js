@@ -28,7 +28,7 @@ export const getById = async (req, res) => {
   export const getByCedula = async (req, res) => {
     try {
       const cedula = req.params.cedula;
-      const [data] = await pool.query(`SELECT * FROM pacientes WHERE cedula  = ?`, [id]); // Llama a readById del DAO
+      const [data] = await pool.query(`SELECT * FROM pacientes WHERE cedula  = ?`, [cedula]); // Llama a readById del DAO
       if (!data || data.length == 0) {
         return res.status(404).json({ error: 'No encontrado' });
       }
@@ -70,14 +70,15 @@ export const updateById = async (req, res) => {
       const id = req.params.id;
       const updateData = req.body;
   
-      if (!id || !updateData.estado) {
+      if (!id || !updateData.nombre || !updateData.apellido || !updateData.genero || !updateData.cedula || 
+        !updateData.fecha_nacimiento || !updateData.direccion || !updateData.email || !updateData.telefono) {
         return res.status(400).json({ error: 'ID y datos de actualización son requeridos' });
       }
   
       const [data] = await pool.query(
         `UPDATE pacientes SET 
         nombre = ?, apellido = ?, genero = ?, cedula = ?, 
-        fecha_nacimiento = ?, direccion = ?, email = ?, telefono = ?, 
+        fecha_nacimiento = ?, direccion = ?, email = ?, telefono = ? 
         WHERE paciente_id = ?`,
         [updateData.nombre, updateData.apellido, updateData.genero, updateData.cedula, 
           updateData.fecha_nacimiento, updateData.direccion, updateData.email, updateData.telefono,

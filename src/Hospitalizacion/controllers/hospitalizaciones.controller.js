@@ -56,7 +56,7 @@ export const finalizarHospitalizacion = async (req, res) => {
     try {
       const id = req.params.id;
       if (!id) {
-        return res.status(400).json({ error: 'ID y datos de actualización (estado) son requeridos' });
+        return res.status(400).json({ error: 'ID es requerido' });
       }
   
       const [data] = await pool.query(
@@ -70,8 +70,8 @@ export const finalizarHospitalizacion = async (req, res) => {
       }
   
       res.status(200).json({
-        message: 'Hospitalización actualizada exitosamente',
-        updatedData: { id: id, ...updateData },
+        message: 'Paciente dado de alta exitosamente',
+        updatedData: { id: id },
       });
     } catch (error) {
       res.status(500).json({ error: error.message });
@@ -87,7 +87,7 @@ export const deleteByIdHospitalizacion = async (req, res) => {
       }
   
       const [data] = await pool.query(
-        `DELETE FROM hospitalizacion WHERE hospitalizacion_id = ?`,
+        `DELETE FROM hospitalizaciones WHERE hospitalizacion_id = ?`,
         [id]
       );
   

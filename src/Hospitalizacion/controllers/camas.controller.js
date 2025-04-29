@@ -2,7 +2,7 @@ import { pool } from "../../db.js";
 
 export const getAll = async (req, res) => {
     try {
-    const [data] = await pool.query(`SELECT * FROM camas`);
+    const [data] = await pool.query(`SELECT * FROM camas ORDER BY habitacion_id`);
     if (!data || data.length == 0) {
       return res.status(404).json({ error: 'No encontrado' });
     }
@@ -12,7 +12,7 @@ export const getAll = async (req, res) => {
   }
 }
 
-export const getById = async (req, res) => {
+export const getByHabitacionId = async (req, res) => {
     try {
       const id = req.params.id;
       const [data] = await pool.query(`SELECT * FROM camas WHERE habitacion_id = ?`, [id]);
@@ -56,8 +56,9 @@ export const updateById = async (req, res) => {
     try {
       const id = req.params.id;
       const updateData = req.body;
+      console.log(req.body,"    Body ---------- id",req.params.id);
   
-      if (!id || !updateData.estado) {
+      if (!id || (!updateData.estado && updateData.estado !== 0)) {
         return res.status(400).json({ error: 'ID y datos de actualización (estado) son requeridos' });
       }
   
