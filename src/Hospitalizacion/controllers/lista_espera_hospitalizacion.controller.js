@@ -27,15 +27,15 @@ export const getByPacienteId = async (req, res) => {
 
 export const create = async (req, res) => {
     try {
-    const { paciente_id, motivo, fecha, hora, nombre, apellido } = req.body;
-    if (!paciente_id || !motivo || !fecha || !hora || !nombre || !apellido) {
+    const { paciente_id, motivo, fecha, nombre, apellido } = req.body;
+    if (!paciente_id || !motivo || !fecha || !nombre || !apellido) {
     return res.status(400).json({ error: 'Id de la habitación es requerido' });
     }
     const [data] = await pool.query(
     `INSERT INTO lista_espera_hospitalizacion 
-    (paciente_id, motivo, fecha, hora, nombre, apellido) 
-    VALUES (?, ?, ?, ?, ?, ?)`,
-    [paciente_id, motivo, fecha, hora, nombre, apellido]
+    (paciente_id, motivo, fecha, nombre, apellido) 
+    VALUES (?, ?, ?, ?, ?)`,
+    [paciente_id, motivo, fecha, nombre, apellido]
     );
 
     const [row] = await pool.query(
@@ -43,7 +43,7 @@ export const create = async (req, res) => {
         [data.insertId]
     );
     res.status(201).json({
-        message: 'Cama creada exitosamente',
+        message: 'Paciente añadido a la lista de espera exitosamente',
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
