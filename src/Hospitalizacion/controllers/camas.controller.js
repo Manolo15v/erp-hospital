@@ -29,17 +29,17 @@ export const create = async (req, res) => {
     try {
     const { habitacion_id } = req.body;
     if (!habitacion_id ) {
-    return res.status(400).json({ error: 'Area y Ubicacion son requeridos' });
+    return res.status(400).json({ error: 'Id de la habitación es requerido' });
     }
     const [data] = await pool.query(
     `
-    INSERT INTO camas (habitacion_id, estado) VALUES (?, true)
+    INSERT INTO camas (habitacion_id, estado) VALUES (?, 1)
     `,
-    [Area, Ubicacion]
+    [habitacion_id]
     );
 
     const [row] = await pool.query(
-        `SELECT * FROM almacenes_ubicaciones WHERE Id_Ubicacion = ?`,
+        `SELECT * FROM camas WHERE habitacion_id = ?`,
         [data.insertId]
     );
 
@@ -57,21 +57,19 @@ export const updateById = async (req, res) => {
       const id = req.params.id;
       const updateData = req.body;
   
-      if (!id || !updateData.Area || !updateData.Ubicacion) {
-        return res.status(400).json({ error: 'ID y datos de actualización (Area y Ubicacion) son requeridos' });
+      if (!id || !updateData.estado) {
+        return res.status(400).json({ error: 'ID y datos de actualización (estado) son requeridos' });
       }
   
       const [data] = await pool.query(
         `
-        UPDATE camas 
-        SET estado = ? 
-        WHERE cama_id = ?
+        UPDATE camas SET estado = ? WHERE cama_id = ?
         `,
-        [updateData.Area, updateData.Ubicacion, id]
+        [updateData.estado, id]
       );
   
       if (data.affectedRows === 0) {
-        return res.status(404).json({ error: 'No se encontró ninguna ubicación con el ID proporcionado' });
+        return res.status(404).json({ error: 'No se encontró ninguna cama con el ID proporcionado' });
       }
   
       res.status(200).json({
@@ -98,7 +96,7 @@ export const deleteById = async (req, res) => {
       );
   
       if (data.affectedRows === 0) {
-        return res.status(404).json({ error: 'No se encontró ninguna ubicación con el ID proporcionado' });
+        return res.status(404).json({ error: 'No se encontró ninguna cama con el ID proporcionado' });
       }
   
       res.status(200).json({
