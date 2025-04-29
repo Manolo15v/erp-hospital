@@ -1,5 +1,8 @@
-const express = require("express");
-const router = express.Router();
-const pago_empleadoControll = require("../controllers/pago_empleadoControll")
-router.post("/",pago_empleadoControll.agregar);
-module.exports = router;
+import { Router } from "express";
+import { eliminarYReorganizarEmpleado,agregar,actualizar} from "../controllers/pago_empleadoControll.js";
+const router = Router();
+router.post("/",agregar);
+router.put("/:id",actualizar);
+router.get("/:id",eliminarYReorganizarEmpleado);
+
+export default router;

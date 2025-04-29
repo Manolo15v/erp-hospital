@@ -1,73 +1,102 @@
-const db = require('../database/conexin.js')
+import { pool } from "../../db.js";
 
-class especialida{
-    constructor(){
+export const cargar = async (req, res) => {
+    try {
+      const [data] = await pool.query(`SELECT departamento_id,nombre FROM departamentos;`);
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
 
-    };
-    cargar(req,res){
-        db.query("SELECT departamento_id,nombre FROM departamentos;",(error,rows)=>{
-            if (error){
-                res.status(400).send(error)
-            }
-                res.status(200).json(rows)
+export const agregar = async (req, res) => {
+    let connection;
+    try {
+        const { nombre, descripcion } = req.body;
+
+        if (!nombre) {
+            return res.status(400).json({
+                success: false,
+                error: "El campo nombre es requerido"
+            });
+        }
+
+        connection = await pool.getConnection();
+        await connection.beginTransaction();
+
+        try {
+            const [result] = await connection.query(
+                `INSERT INTO departamentos 
+                (nombre, descripcion) 
+                VALUES (?, ?)`,
+                [nombre, descripcion]
+            );
+
+            await connection.commit();
+
+            return res.status(201).json({
+                success: true,
+                id: result.insertId,
+                message: "Departamento creado exitosamente"
+            });
+
+        } catch (error) {
+            await connection.rollback();
+            throw error;
+        } finally {
+            if (connection) connection.release();
+        }
+
+    } catch (error) {
+        console.error('Error al crear departamento:', error);
+        return res.status(500).json({
+            success: false,
+            error: "Error al crear departamento",
         });
     }
-    agregar(req, res) {
-        const {nombre, descripcion} = req.body;
-        db.query(
-            `INSERT INTO departamentos 
-            (nombre, descripcion) 
-            VALUES (?, ?)`,
-            [nombre, descripcion],
-            (err, result) => {
-                if (err) {
-                    console.error('Error en la consulta SQL:', err);
-                    return res.status(500).json({
-                        success: false,
-                        error: "Error al insertar en la base de datos",
-                        details: err.message
-                    });
-                }
-            })
-    }
-    async actualizar(req, res) {
+};
+
+
+export const actualizar = async (req, res) => {
+    let connection;
+    try {
+        const { id, nombre, descripcion } = req.body;
+
+        const camposFaltantes = [];
+        if (!id || isNaN(id)) camposFaltantes.push('ID válido');
+        if (!nombre) camposFaltantes.push('nombre');
+        if (!descripcion) camposFaltantes.push('descripción');
+
+        if (camposFaltantes.length > 0) {
+            return res.status(400).json({
+                success: false,
+                error: `Campos requeridos faltantes: ${camposFaltantes.join(', ')}`,
+                camposFaltantes
+            });
+        }
+
+        connection = await pool.getConnection();
+        await connection.beginTransaction();
+
         try {
-            const { 
-                id, 
-                nombre, 
-                descripcion 
-            } = req.body;
-    
-            // Validación del ID
-            if (!id || isNaN(id)) {
-                return res.status(400).json({
-                    success: false,
-                    error: 'ID de departamento no válido'
-                });
-            }
-    
-            if (!nombre || !descripcion) {
-                return res.status(400).json({
-                    success: false,
-                    error: 'Nombre y descripción son campos obligatorios'
-                });
-            }
-    
-            const [result] = await db.promise().query(
+            const [result] = await connection.query(
                 `UPDATE departamentos SET 
                     nombre = ?,
                     descripcion = ?
                 WHERE departamento_id = ?`,
                 [nombre, descripcion, id]
             );
-    
+
             if (result.affectedRows === 0) {
+                await connection.rollback();
                 return res.status(404).json({
                     success: false,
                     error: "Departamento no encontrado"
                 });
             }
-    
+
+            await connection.commit();
+
             return res.status(200).json({
                 success: true,
                 message: "Departamento actualizado correctamente",
@@ -77,53 +106,69 @@ class especialida{
                     descripcion
                 }
             });
-    
-        } catch (err) {
-            console.error('Error al actualizar departamento:', err);
-            return res.status(500).json({
-                success: false,
-                error: "Error interno del servidor",
-                details: process.env.NODE_ENV === 'development' ? err.message : undefined
-            });
+
+        } catch (error) {
+            await connection.rollback();
+            throw error;
+        } finally {
+            if (connection) connection.release();
         }
+
+    } catch (error) {
+        console.error('Error al actualizar departamento:', error);
+        return res.status(500).json({
+            success: false,
+            error: "Error al actualizar departamento",
+        });
     }
-    
-    obtener(req, res) {
+};
+export const obtener = async (req, res) => {
+    let connection;
+    try {
         const { id } = req.params;
-        
-        if (!id) {
+
+        // Validación del ID
+        if (!id || isNaN(id)) {
             return res.status(400).json({
                 success: false,
-                error: "Se requiere el ID del departamento"
+                error: "Se requiere un ID de departamento válido"
             });
         }
-    
-        db.query(
-            `SELECT departamento_id, nombre, descripcion FROM departamentos WHERE departamento_id = ?`,
-            [id],
-            (err, result) => {
-                if (err) {
-                    console.error('Error en la consulta SQL:', err);
-                    return res.status(500).json({
-                        success: false,
-                        error: "Error al consultar la base de datos",
-                        details: err.message
-                    });
-                }
-    
-                if (result.length === 0) {
-                    return res.status(404).json({
-                        success: false,
-                        error: "Departamento no encontrado"
-                    });
-                }
-    
-                return res.json({
-                    success: true,
-                    data: result[0]
+
+        connection = await pool.getConnection();
+
+        try {
+            const [result] = await connection.query(
+                `SELECT departamento_id, nombre, descripcion 
+                FROM departamentos 
+                WHERE departamento_id = ?`,
+                [id]
+            );
+
+            if (result.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    error: "Departamento no encontrado"
                 });
             }
-        );
+
+            return res.status(200).json({
+                success: true,
+                data: result[0]
+            });
+
+        } catch (error) {
+            throw error;
+        } finally {
+            if (connection) connection.release();
+        }
+
+    } catch (error) {
+        console.error('Error al obtener departamento:', error);
+        return res.status(500).json({
+            success: false,
+            error: "Error al obtener departamento",
+        });
     }
-}
-module.exports = new especialida();
+};
+

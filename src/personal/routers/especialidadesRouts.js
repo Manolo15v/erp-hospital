@@ -1,8 +1,9 @@
-const express = require("express");
-const router = express.Router();
-const especialidadesControll = require("../controllers/especialidadControll.js")
-router.get("/",especialidadesControll.cargar);
-router.post("/",especialidadesControll.agregar);
-router.put("/:id",especialidadesControll.actualizar);
-router.get("/:id",especialidadesControll.obtener);
-module.exports = router;
+import { Router } from "express";
+import { cargar,agregar,actualizar,obtener} from "../controllers/especialidadControll.js";
+const router = Router();
+router.get("/",cargar);
+router.post("/",agregar);
+router.put("/:id",actualizar);
+router.get("/:id",obtener);
+
+export default router;

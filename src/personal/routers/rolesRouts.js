@@ -1,8 +1,9 @@
-const express= require("express");
-const rout= express.Router();
-const rolControll = require("../controllers/rolesControll.js");
-rout.get("/",rolControll.cargar);
-rout.post('/', rolControll.agregar);
-rout.put("/:id",rolControll.actualizar);
-rout.get("/:id",rolControll.obtener);
-module.exports = rout;
+import { Router } from "express";
+import { cargar,agregar,actualizar,obtener} from "../controllers/rolesControll.js";
+const router = Router();
+router.get("/",cargar);
+router.post("/",agregar);
+router.put("/:id",actualizar);
+router.get("/:id",obtener);
+
+export default router;
