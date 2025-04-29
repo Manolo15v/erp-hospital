@@ -23,7 +23,7 @@ Cada Router va a contener una parte de la api (el backend) y cada router va esta
 //Hospitalizacion
 
 import camasRoutes from "./Hospitalizacion/routes/camas.routes.js";
-import habitacionesRoutes from "./Hospitalizacion/routes/camas.routes.js";
+import habitacionesRoutes from "./Hospitalizacion/routes/habitaciones.routes.js";
 import hospitalizacionesRoutes from "./Hospitalizacion/routes/hospitalizaciones.routes.js";
 import examenesRoutes from "./Hospitalizacion/routes/examenes_hospitalizacion.routes.js";
 import signosVitalesRoutes from "./Hospitalizacion/routes/signos_vitales.routes.js";
