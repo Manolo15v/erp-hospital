@@ -49,6 +49,9 @@ export const createExamen = async (req, res) => {
     VALUES (?, ?, ?, ?, ?, ?, ?)`,
     [hospitalizacion_id, nombre, apellido, cedula, fecha, titulo, parametros]
     );
+    res.status(201).json({
+      message: 'Examen creada exitosamente',
+  });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -26,6 +26,9 @@ import camasRoutes from "./Hospitalizacion/routes/camas.routes.js";
 import habitacionesRoutes from "./Hospitalizacion/routes/camas.routes.js";
 import hospitalizacionesRoutes from "./Hospitalizacion/routes/hospitalizaciones.routes.js";
 import examenesRoutes from "./Hospitalizacion/routes/examenes_hospitalizacion.routes.js";
+import signosVitalesRoutes from "./Hospitalizacion/routes/signos_vitales.routes.js";
+import pacientesRoutes from "./Hospitalizacion/routes/pacientes.routes.js";
+import listaEsperaRoutes from "./Hospitalizacion/routes/lista_espera_hospitalizacion.routes.js";
 
 //Inventario
 
@@ -89,6 +92,9 @@ app.use("/api/hospitalizacion/camas", camasRoutes);
 app.use("/api/hospitalizacion/habitaciones", habitacionesRoutes);
 app.use("/api/hospitalizacion/hospitalizaciones", hospitalizacionesRoutes);
 app.use("/api/hospitalizacion/examenes", examenesRoutes);
+app.use("/api/hospitalizacion/signosVitales", signosVitalesRoutes);
+app.use("/api/hospitalizacion/pacientes", pacientesRoutes);
+app.use("/api/hospitalizacion/listaEspera", listaEsperaRoutes);
 
 //Inventario
 
