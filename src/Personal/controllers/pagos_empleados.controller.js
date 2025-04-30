@@ -178,3 +178,49 @@ export const eliminarYReorganizarEmpleado = async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   };
+
+  export const cargar = async (req, res) => {
+    try {
+      const [data] = await pool.query(`SELECT * FROM pagos_empleados;`);
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+  export const obtener = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Validación del ID
+        if (!id || isNaN(id)) {
+            return res.status(400).json({
+                success: false,
+                error: "Se requiere un ID del pago válido"
+            });
+        }
+
+            const [result] = await pool.query(
+                `SELECT * FROM pagos_empleados roles WHERE pago_id = ?`,[id]
+            );
+
+            if (result.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    error: "pago no encontrado"
+                });
+            }
+
+            return res.status(200).json({
+                success: true,
+                data: result[0]
+            });
+
+
+    } catch (error) {
+        console.error('Error al obtener pago:', error);
+        return res.status(500).json({
+            success: false,
+            error: "Error al obtener pago"
+        });
+    }
+};
