@@ -13,7 +13,9 @@ export const consultar = async (req, res) => {
                 roles r ON e.rol_id = r.rol_id
             LEFT JOIN 
                 departamentos d ON e.departamento_id = d.departamento_id`);
+
       res.status(200).json(data);
+      
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -431,6 +433,7 @@ export const reactivar = async (req, res) => {
 
     } catch (error) {
         console.error('Error en actualización:', error);
+        
         res.status(500).json({ 
             success: false,
             error: "Error al procesar la actualización",

@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { consultar,consultar_uno,eliminar,actualizar,agregar,reactivar } from "../controllers/empleadosControllers.js";
+import { consultar,consultar_uno,eliminar,actualizar,agregar,reactivar } from "../controllers/empleados.controller.js";
+
 const router = Router();
 
 router.get('/', consultar);

@@ -47,10 +47,10 @@ import repuestosRoutes from "./Inventario/routes/repuestos.routes.js"
 //Mantenimiento
 
 //Personal
-import empleadosRoutes from "./personal/routers/empleadosRouts.js";
-import especialidadesRoutes from "./personal/routers/especialidadesRouts.js";
-import rolesRoutes from "./personal/routers/rolesRouts.js";
-import pago_empleadoRoutes from "./personal/routers/pagos_empleadosRouts.js";
+import empleadosRoutes from "./Personal/routes/empleados.routes.js";
+import especialidadesRoutes from "./Personal/routes/especialidades.routes.js";
+import rolesRoutes from "./Personal/routes/roles.routes.js";
+import pago_empleadoRoutes from "./Personal/routes/pagos_empleados.routes.js";
 
 /*
 
@@ -115,10 +115,11 @@ app.use("/api/inventario/repuestos", repuestosRoutes);
 //Mantenimiento
 
 //Personal
-app.use('/api/empleados', empleadosRoutes);
-app.use("/api/especialidades",especialidadesRoutes);
-app.use("/api/roles",rolesRoutes);
-app.use("/api/pago_empleado",pago_empleadoRoutes);
+
+app.use('/api/personal/empleados', empleadosRoutes);
+app.use("/api/personal/especialidades", especialidadesRoutes);
+app.use("/api/personal/roles", rolesRoutes);
+app.use("/api/personal/pago_empleado", pago_empleadoRoutes);
 
 // Middleware para manejar rutas no encontradas
 app.use((req, res, next) => {
