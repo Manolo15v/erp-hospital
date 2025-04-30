@@ -39,10 +39,10 @@ import repuestosRoutes from "./Inventario/routes/repuestos.routes.js"
 //Mantenimiento
 
 //Personal
-import empleadosRoutes from "./personal/routers/empleadosRouts.js"
-import especialidadesRoutes from "./personal/routers/especialidadesRouts.js"
-import rolesRoutes from "./personal/routers/rolesRouts.js"
-import pago_empleadoRoutes from "./personal/routers/pagos_empleadosRouts.js"
+import empleadosRoutes from "./personal/routers/empleadosRouts.js";
+import especialidadesRoutes from "./personal/routers/especialidadesRouts.js";
+import rolesRoutes from "./personal/routers/rolesRouts.js";
+import pago_empleadoRoutes from "./personal/routers/pagos_empleadosRouts.js";
 
 /*
 
