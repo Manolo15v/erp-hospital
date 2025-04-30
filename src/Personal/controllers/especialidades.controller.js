@@ -37,8 +37,7 @@ export const cargar = async (req, res) => {
         console.error('Error al crear departamento:', error);
         return res.status(500).json({
             success: false,
-            error: "Error al crear departamento",
-            details: process.env.NODE_ENV === 'development' ? error.message : undefined
+            error: "Error al crear departamento"
         });
     }
 };
@@ -91,8 +90,7 @@ export const actualizar = async (req, res) => {
         console.error('Error al actualizar departamento:', error);
         return res.status(500).json({
             success: false,
-            error: "Error al actualizar departamento",
-            details: process.env.NODE_ENV === 'development' ? error.message : undefined
+            error: "Error al actualizar departamento"
         });
     }
 };
@@ -132,8 +130,7 @@ export const obtener = async (req, res) => {
         console.error('Error al obtener departamento:', error);
         return res.status(500).json({
             success: false,
-            error: "Error al obtener departamento",
-            details: process.env.NODE_ENV === 'development' ? error.message : undefined
+            error: "Error al obtener departamento"
         });
     }
 };

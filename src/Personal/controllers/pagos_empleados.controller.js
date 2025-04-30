@@ -65,7 +65,6 @@ export const agregar = async (req, res) => {
         return res.status(500).json({
             success: false,
             error: "Error al registrar pago",
-            details: process.env.NODE_ENV === 'development' ? error.message : undefined
         });
     }
 };
@@ -151,8 +150,7 @@ export const actualizar = async (req, res) => {
         console.error('Error al actualizar pago:', error);
         return res.status(500).json({
             success: false,
-            error: "Error al actualizar pago",
-            details: process.env.NODE_ENV === 'development' ? error.message : undefined
+            error: "Error al actualizar pago"
         });
     }
 };

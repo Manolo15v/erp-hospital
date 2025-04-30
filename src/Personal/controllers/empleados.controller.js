@@ -224,7 +224,6 @@ export const actualizar = async (req, res) => {
         res.status(500).json({ 
             success: false,
             error: "Error al procesar la actualización",
-            details: process.env.NODE_ENV === 'development' ? error.message : undefined
         });
     }
 };

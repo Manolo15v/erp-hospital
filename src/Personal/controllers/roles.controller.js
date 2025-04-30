@@ -37,14 +37,13 @@ export const agregar = async (req, res) => {
         console.error('Error al crear rol:', error);
         return res.status(500).json({
             success: false,
-            error: "Error al crear rol",
+            error: "Error al crear rol"
         });
     }
 };
 
 
 export const actualizar = async (req, res) => {
-    let connection;
     try {
         const { id } = req.params;
         const {  nombre, descripcion } = req.body;
@@ -62,10 +61,8 @@ export const actualizar = async (req, res) => {
             });
         }
 
-        connection = await pool.getConnection();
-        await connection.beginTransaction();
 
-        const [result] = await connection.query(
+        const [result] = await pool.query(
             `UPDATE roles SET 
                 nombre = ?,
                 descripcion = ?
@@ -74,7 +71,6 @@ export const actualizar = async (req, res) => {
         );
 
         if (result.affectedRows === 0) {
-            await connection.rollback();
             return res.status(404).json({
                 success: false,
                 error: "rol no encontrado"
@@ -97,7 +93,7 @@ export const actualizar = async (req, res) => {
         console.error('Error al actualizar rol:', error);
         return res.status(500).json({
             success: false,
-            error: "Error al actualizar rol",
+            error: "Error al actualizar rol"
         });
     }
 };
@@ -134,7 +130,7 @@ export const obtener = async (req, res) => {
         console.error('Error al obtener rol:', error);
         return res.status(500).json({
             success: false,
-            error: "Error al obtener rol",
+            error: "Error al obtener rol"
         });
     }
 };
