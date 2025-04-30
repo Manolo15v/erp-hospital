@@ -157,37 +157,37 @@ export const actualizar = async (req, res) => {
 export const eliminarYReorganizarEmpleado = async (req, res) => {
     try {
         const { id } = req.params;
-      if (!id) {
+        if (!id) {
         return res.status(400).json({ error: 'ID es requerido' });
-      }
-  
-      const [data] = await pool.query(
+        }
+
+        const [data] = await pool.query(
         `DELETE FROM pagos_empleados WHERE pago_id = ?`,[id]
-      );
-  
-      if (data.affectedRows === 0) {
+        );
+
+        if (data.affectedRows === 0) {
         return res.status(404).json({ error: 'No se encontró ninguna pago con el ID proporcionado' });
-      }
-  
-      res.status(200).json({
+        }
+
+        res.status(200).json({
         message: 'pago eliminada exitosamente',
         deletedId: id,
-      });
+        });
     } catch (error) {
         console.log(error)
-      res.status(500).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
-  };
+};
 
-  export const cargar = async (req, res) => {
+export const cargar = async (req, res) => {
     try {
-      const [data] = await pool.query(`SELECT * FROM pagos_empleados;`);
-      res.status(200).json(data);
+        const [data] = await pool.query(`SELECT * FROM pagos_empleados;`);
+        res.status(200).json(data);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
-  }
-  export const obtener = async (req, res) => {
+}
+export const obtener = async (req, res) => {
     try {
         const { id } = req.params;
 

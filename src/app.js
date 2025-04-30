@@ -50,7 +50,7 @@ import repuestosRoutes from "./Inventario/routes/repuestos.routes.js"
 import empleadosRoutes from "./Personal/routes/empleados.routes.js";
 import especialidadesRoutes from "./Personal/routes/especialidades.routes.js";
 import rolesRoutes from "./Personal/routes/roles.routes.js";
-import pago_empleadoRoutes from "./Personal/routes/pagos_empleados.routes.js";
+import pagosEmpleadosRoutes from "./Personal/routes/pagos_empleados.routes.js";
 
 /*
 
@@ -119,7 +119,8 @@ app.use("/api/inventario/repuestos", repuestosRoutes);
 app.use('/api/personal/empleados', empleadosRoutes);
 app.use("/api/personal/especialidades", especialidadesRoutes);
 app.use("/api/personal/roles", rolesRoutes);
-app.use("/api/personal/pago_empleado", pago_empleadoRoutes);
+app.use("/api/personal/pagos_empleados", pagosEmpleadosRoutes);
+
 // Middleware para manejar rutas no encontradas
 app.use((req, res, next) => {
   res.status(404).json({ message: "Not found" });
