@@ -3,6 +3,6 @@ import { eliminarYReorganizarEmpleado,agregar,actualizar} from "../controllers/p
 const router = Router();
 router.post("/",agregar);
 router.put("/:id",actualizar);
-router.get("/:id",eliminarYReorganizarEmpleado);
+router.delete("/:id",eliminarYReorganizarEmpleado);
 
 export default router;

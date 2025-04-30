@@ -99,10 +99,10 @@ app.use("/api/inventario/repuestos", repuestosRoutes);
 //Mantenimiento
 
 //Personal
-app.use('/empleados', empleadosRoutes);
-app.use("/especialidades",especialidadesRoutes);
-app.use("/roles",rolesRoutes);
-app.use("/pago_empleado",pago_empleadoRoutes);
+app.use('/api/empleados', empleadosRoutes);
+app.use("/api/especialidades",especialidadesRoutes);
+app.use("/api/roles",rolesRoutes);
+app.use("/api/pago_empleado",pago_empleadoRoutes);
 
 // Middleware para manejar rutas no encontradas
 app.use((req, res, next) => {

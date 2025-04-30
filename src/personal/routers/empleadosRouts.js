@@ -5,9 +5,8 @@ const router = Router();
 router.get('/', consultar);
 router.post('/', agregar);
 router.put('/activacion/:id', reactivar);
-router.route('/:id')
-    .get(consultar_uno)
-    .put(actualizar)
-    .delete(eliminar)
+router.put('/:id',actualizar);
+router.get('/:id',consultar_uno);
+router.delete('/:id',eliminar);
 
 export default router;

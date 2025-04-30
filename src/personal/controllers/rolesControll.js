@@ -10,7 +10,6 @@ export const cargar = async (req, res) => {
   }
 
 export const agregar = async (req, res) => {
-    let connection;
     try {
         const { nombre, descripcion } = req.body;
 
@@ -21,31 +20,18 @@ export const agregar = async (req, res) => {
             });
         }
 
-        connection = await pool.getConnection();
-        await connection.beginTransaction();
+        const [result] = await pool.query(
+            `INSERT INTO roles 
+        (nombre, descripcion) 
+        VALUES (?, ?)`,
+        [nombre, descripcion]
+        );
 
-        try {
-            const [result] = await connection.query(
-                `INSERT INTO roles 
-            (nombre, descripcion) 
-            VALUES (?, ?)`,
-            [nombre, descripcion]
-            );
-
-            await connection.commit();
-
-            return res.status(201).json({
-                success: true,
-                id: result.insertId,
-                message: "rol creado exitosamente"
-            });
-
-        } catch (error) {
-            await connection.rollback();
-            throw error;
-        } finally {
-            if (connection) connection.release();
-        }
+        return res.status(201).json({
+            success: true,
+            id: result.insertId,
+            message: "rol creado exitosamente"
+        });
 
     } catch (error) {
         console.error('Error al crear rol:', error);
@@ -60,7 +46,8 @@ export const agregar = async (req, res) => {
 export const actualizar = async (req, res) => {
     let connection;
     try {
-        const { id, nombre, descripcion } = req.body;
+        const { id } = req.params;
+        const {  nombre, descripcion } = req.body;
 
         const camposFaltantes = [];
         if (!id || isNaN(id)) camposFaltantes.push('ID válido');
@@ -78,41 +65,33 @@ export const actualizar = async (req, res) => {
         connection = await pool.getConnection();
         await connection.beginTransaction();
 
-        try {
-            const [result] = await connection.query(
-                `UPDATE roles SET 
-                    nombre = ?,
-                    descripcion = ?
-                WHERE rol_id = ?`,
-                [nombre, descripcion, id]
-            );
+        const [result] = await connection.query(
+            `UPDATE roles SET 
+                nombre = ?,
+                descripcion = ?
+            WHERE rol_id = ?`,
+        [nombre, descripcion, id]
+        );
 
-            if (result.affectedRows === 0) {
-                await connection.rollback();
-                return res.status(404).json({
-                    success: false,
-                    error: "rol no encontrado"
-                });
-            }
-
-            await connection.commit();
-
-            return res.status(200).json({
-                success: true,
-                message: "rol actualizado correctamente",
-                data: {
-                    rol_id: id,
-                    nombre,
-                    descripcion
-                }
-            });
-
-        } catch (error) {
+        if (result.affectedRows === 0) {
             await connection.rollback();
-            throw error;
-        } finally {
-            if (connection) connection.release();
+            return res.status(404).json({
+                success: false,
+                error: "rol no encontrado"
+            });
         }
+
+
+        return res.status(200).json({
+            success: true,
+            message: "rol actualizado correctamente",
+            data: {
+                rol_id: id,
+                nombre,
+                descripcion
+            }
+        });
+
 
     } catch (error) {
         console.error('Error al actualizar rol:', error);
@@ -123,7 +102,6 @@ export const actualizar = async (req, res) => {
     }
 };
 export const obtener = async (req, res) => {
-    let connection;
     try {
         const { id } = req.params;
 
@@ -135,10 +113,7 @@ export const obtener = async (req, res) => {
             });
         }
 
-        connection = await pool.getConnection();
-
-        try {
-            const [result] = await connection.query(
+            const [result] = await pool.query(
                 `SELECT rol_id, nombre, descripcion FROM roles WHERE rol_id = ?`,[id]
             );
 
@@ -154,11 +129,6 @@ export const obtener = async (req, res) => {
                 data: result[0]
             });
 
-        } catch (error) {
-            throw error;
-        } finally {
-            if (connection) connection.release();
-        }
 
     } catch (error) {
         console.error('Error al obtener rol:', error);

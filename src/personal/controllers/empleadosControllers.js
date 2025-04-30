@@ -102,8 +102,8 @@ export const eliminar = async (req, res) => {
 
 export const actualizar = async (req, res) => {
     try {
-        const { 
-            id, 
+        const { id } = req.params;
+        const {  
             nombre, 
             apellido, 
             cedula, 
@@ -125,7 +125,6 @@ export const actualizar = async (req, res) => {
         } = req.body;
 
         const camposRequeridos = {
-            id: 'ID del empleado',
             nombre: 'Nombre',
             cedula: 'Cédula',
             sueldo: 'Sueldo',
@@ -270,54 +269,36 @@ export const agregar = async (req, res) => {
             });
         }
 
-   
-        const connection = await pool.getConnection();
-        await connection.beginTransaction();
+        const [empResult] = await pool.query(
+            `INSERT INTO empleados 
+            (nombre, apellido, cedula, fecha_nacimiento, fecha_contratacion, 
+             direccion, email, telefono, rol_id, cargo, departamento_id, sueldo, estado, area, descripcion_empleado) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [nombre, apellido, cedula, fecha_nacimiento, fecha_contratacion, 
+             direccion, email, telefono, rol_id, cargo, departamento_id, sueldo, 'Activo', area, descripcion_empleado]
+        );
 
-        try {
+        const empleadoId = empResult.insertId;
 
-            const [empResult] = await connection.query(
-                `INSERT INTO empleados 
-                (nombre, apellido, cedula, fecha_nacimiento, fecha_contratacion, 
-                 direccion, email, telefono, rol_id, cargo, departamento_id, sueldo, estado, area, descripcion_empleado) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-                [nombre, apellido, cedula, fecha_nacimiento, fecha_contratacion, 
-                 direccion, email, telefono, rol_id, cargo, departamento_id, sueldo, 'Activo', area, descripcion_empleado]
-            );
+        await pool.query(
+            `INSERT INTO nominas 
+            (salario_base, salario_neto, empleado_id, numero_cuenta) 
+            VALUES (?, ?, ?, ?)`,
+            [sueldo, salario_neto, empleadoId, numero_cuenta]
+        );
 
-            const empleadoId = empResult.insertId;
+        await pool.query(
+            `INSERT INTO horarios 
+            (turno, dia, empleado_id) 
+            VALUES (?, ?, ?)`,
+            [turno, dia, empleadoId]
+        );
 
-   
-            await connection.query(
-                `INSERT INTO nominas 
-                (salario_base, salario_neto, empleado_id, numero_cuenta) 
-                VALUES (?, ?, ?, ?)`,
-                [sueldo, salario_neto, empleadoId, numero_cuenta]
-            );
-
-            await connection.query(
-                `INSERT INTO horarios 
-                (turno, dia, empleado_id) 
-                VALUES (?, ?, ?)`,
-                [turno, dia, empleadoId]
-            );
-
-  
-            await connection.commit();
-
-            return res.status(201).json({
-                success: true,
-                id: empleadoId,
-                message: "Empleado, nómina y horario registrados exitosamente"
-            });
-
-        } catch (error) {
-
-            await connection.rollback();
-            throw error;
-        } finally {
-            connection.release();
-        }
+        return res.status(201).json({
+            success: true,
+            id: empleadoId,
+            message: "Empleado, nómina y horario registrados exitosamente"
+        });
 
     } catch (error) {
         console.error('Error en agregar empleado:', error);
@@ -331,8 +312,8 @@ export const agregar = async (req, res) => {
 
 export const reactivar = async (req, res) => {
     try {
+        const { id } = req.params;
         const { 
-            id, 
             nombre, 
             apellido, 
             cedula, 
@@ -355,7 +336,6 @@ export const reactivar = async (req, res) => {
         } = req.body;
 
         const camposRequeridos = {
-            id: 'ID del empleado',
             nombre: 'Nombre',
             cedula: 'Cédula',
             sueldo: 'Sueldo',

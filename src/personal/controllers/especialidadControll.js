@@ -9,8 +9,7 @@ export const cargar = async (req, res) => {
     }
   }
 
-export const agregar = async (req, res) => {
-    let connection;
+  export const agregar = async (req, res) => {
     try {
         const { nombre, descripcion } = req.body;
 
@@ -21,46 +20,34 @@ export const agregar = async (req, res) => {
             });
         }
 
-        connection = await pool.getConnection();
-        await connection.beginTransaction();
+        const [result] = await pool.query(
+            `INSERT INTO departamentos 
+            (nombre, descripcion) 
+            VALUES (?, ?)`,
+            [nombre, descripcion]
+        );
 
-        try {
-            const [result] = await connection.query(
-                `INSERT INTO departamentos 
-                (nombre, descripcion) 
-                VALUES (?, ?)`,
-                [nombre, descripcion]
-            );
-
-            await connection.commit();
-
-            return res.status(201).json({
-                success: true,
-                id: result.insertId,
-                message: "Departamento creado exitosamente"
-            });
-
-        } catch (error) {
-            await connection.rollback();
-            throw error;
-        } finally {
-            if (connection) connection.release();
-        }
+        return res.status(201).json({
+            success: true,
+            id: result.insertId,
+            message: "Departamento creado exitosamente"
+        });
 
     } catch (error) {
         console.error('Error al crear departamento:', error);
         return res.status(500).json({
             success: false,
             error: "Error al crear departamento",
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined
         });
     }
 };
 
 
 export const actualizar = async (req, res) => {
-    let connection;
     try {
-        const { id, nombre, descripcion } = req.body;
+        const { id } = req.params;
+        const { nombre, descripcion } = req.body;
 
         const camposFaltantes = [];
         if (!id || isNaN(id)) camposFaltantes.push('ID válido');
@@ -75,55 +62,42 @@ export const actualizar = async (req, res) => {
             });
         }
 
-        connection = await pool.getConnection();
-        await connection.beginTransaction();
+        const [result] = await pool.query(
+            `UPDATE departamentos SET 
+                nombre = ?,
+                descripcion = ?
+            WHERE departamento_id = ?`,
+            [nombre, descripcion, id]
+        );
 
-        try {
-            const [result] = await connection.query(
-                `UPDATE departamentos SET 
-                    nombre = ?,
-                    descripcion = ?
-                WHERE departamento_id = ?`,
-                [nombre, descripcion, id]
-            );
-
-            if (result.affectedRows === 0) {
-                await connection.rollback();
-                return res.status(404).json({
-                    success: false,
-                    error: "Departamento no encontrado"
-                });
-            }
-
-            await connection.commit();
-
-            return res.status(200).json({
-                success: true,
-                message: "Departamento actualizado correctamente",
-                data: {
-                    departamento_id: id,
-                    nombre,
-                    descripcion
-                }
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                success: false,
+                error: "Departamento no encontrado"
             });
-
-        } catch (error) {
-            await connection.rollback();
-            throw error;
-        } finally {
-            if (connection) connection.release();
         }
+
+        return res.status(200).json({
+            success: true,
+            message: "Departamento actualizado correctamente",
+            data: {
+                departamento_id: id,
+                nombre,
+                descripcion
+            }
+        });
 
     } catch (error) {
         console.error('Error al actualizar departamento:', error);
         return res.status(500).json({
             success: false,
             error: "Error al actualizar departamento",
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined
         });
     }
 };
+
 export const obtener = async (req, res) => {
-    let connection;
     try {
         const { id } = req.params;
 
@@ -135,39 +109,31 @@ export const obtener = async (req, res) => {
             });
         }
 
-        connection = await pool.getConnection();
+        const [result] = await pool.query(
+            `SELECT departamento_id, nombre, descripcion 
+            FROM departamentos 
+            WHERE departamento_id = ?`,
+            [id]
+        );
 
-        try {
-            const [result] = await connection.query(
-                `SELECT departamento_id, nombre, descripcion 
-                FROM departamentos 
-                WHERE departamento_id = ?`,
-                [id]
-            );
-
-            if (result.length === 0) {
-                return res.status(404).json({
-                    success: false,
-                    error: "Departamento no encontrado"
-                });
-            }
-
-            return res.status(200).json({
-                success: true,
-                data: result[0]
+        if (result.length === 0) {
+            return res.status(404).json({
+                success: false,
+                error: "Departamento no encontrado"
             });
-
-        } catch (error) {
-            throw error;
-        } finally {
-            if (connection) connection.release();
         }
+
+        return res.status(200).json({
+            success: true,
+            data: result[0]
+        });
 
     } catch (error) {
         console.error('Error al obtener departamento:', error);
         return res.status(500).json({
             success: false,
             error: "Error al obtener departamento",
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined
         });
     }
 };
