@@ -44,6 +44,8 @@ import repuestosRoutes from "./Inventario/routes/repuestos.routes.js"
 
 //Laboratorio
 
+import solicitudesLaboratorioRoutes from "./Laboratorio/routes/solicitudes_laboratorio.routes.js";
+
 //Mantenimiento
 
 //Personal
@@ -109,6 +111,8 @@ app.use("/api/inventario/productosUbicacion", productosUbicacionRoutes);
 app.use("/api/inventario/repuestos", repuestosRoutes);
 
 //Laboratorio
+
+app.use("/api/laboratorio/solicitudesLaboratorio", solicitudesLaboratorioRoutes);
 
 //Mantenimiento
 
