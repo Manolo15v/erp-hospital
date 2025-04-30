@@ -56,7 +56,6 @@ export const updateById = async (req, res) => {
     try {
       const id = req.params.id;
       const updateData = req.body;
-      console.log(req.body,"    Body ---------- id",req.params.id);
   
       if (!id || (!updateData.estado && updateData.estado !== 0)) {
         return res.status(400).json({ error: 'ID y datos de actualización (estado) son requeridos' });

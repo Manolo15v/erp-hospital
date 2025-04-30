@@ -33,7 +33,7 @@ export const create = async (req, res) => {
     if (!hospitalizacion_id || !frecuencia_cardiaca || !presion_arterial || 
       !frecuencia_respiratoria || !temperatura_corporal || !saturacion_oxigeno || 
       !balance_hidrico) {
-    return res.status(400).json({ error: 'Id de la habitación es requerido' });
+    return res.status(400).json({ error: 'Error en la creacion de signos viatales' });
     }
     const [data] = await pool.query(
     `INSERT INTO signos_vitales 

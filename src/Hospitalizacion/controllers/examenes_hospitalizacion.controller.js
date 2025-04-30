@@ -15,7 +15,7 @@ export const getAllExamenes = async (req, res) => {
 export const getByHospitalizacionId = async (req, res) => {
     try {
       const id = req.params.id;
-      const [data] = await pool.query(`SELECT * FROM examenes_hospitalizacion WHERE hospitalizacion_id = ?`, [id]); // Llama a readById del DAO
+      const [data] = await pool.query(`SELECT * FROM examenes_hospitalizacion WHERE hospitalizacion_id = ?`, [id]); 
       if (!data || data.length == 0) {
         return res.status(404).json({ error: 'No encontrado' });
       }
