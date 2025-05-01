@@ -38,6 +38,10 @@ import repuestosRoutes from "./Inventario/routes/repuestos.routes.js"
 
 //Mantenimiento
 
+import mantenimientoRoute from './mantenimiento/routes/mantenimientoRoute.js';
+import reporteRoute from './mantenimiento/routes/reporteRoute.js'
+import ordenesTrabajoRoute from './mantenimiento/routes/ordenesRoute.js'
+
 //Personal
 
 
@@ -95,6 +99,10 @@ app.use("/api/inventario/repuestos", repuestosRoutes);
 //Laboratorio
 
 //Mantenimiento
+
+app.use('/api/mantenimiento', mantenimientoRoute);
+app.use('/api/ordenes', ordenesTrabajoRoute);
+app.use('/api/reporte', reporteRoute);
 
 //Personal
 
