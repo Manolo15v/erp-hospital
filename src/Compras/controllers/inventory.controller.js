@@ -26,7 +26,6 @@ async function Inventory() {
             FROM repuestos r
             WHERE r.Unidades <= r.Unidades_Minimas;
         `);
-        console.log(data)
         return data
     } catch (error) {
         throw new Error("Error en conseguir el inventario")

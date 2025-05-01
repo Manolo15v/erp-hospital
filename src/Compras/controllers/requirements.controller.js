@@ -195,7 +195,7 @@ export const updateRequirements = async (req,res) => {
         }
 
         const newRequirement = req.body;
-        const reqProducts = await ProductsRequeriments(products,inv_equipment)
+        const reqProducts = await ProductsRequeriments()
         const recursoIds = [];
         const recursoCodes = [];
         const recursos_list = [];

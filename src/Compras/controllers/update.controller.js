@@ -17,33 +17,24 @@ export const updateData = async (req, res) => {
         } else {
             estado = 'Recibida';
         }
-        const [orden] = await pool.query('SELECT * FROM ordenes_compra WHERE orden_compra_id = ?', id);
-        const tempProductosId = [];
-        const tempProductosTipo = [];
-        const tempProductosCantidad = [];
+        const consulta = 'select * from ordenes_compra where orden_compra_id = ?'
+        const [consulta_id] = await pool.query(consulta,id)
 
-        for (let i = 1; i <= 5; i++) {
-            const tipoRecurso = orden[`tipo_recurso${i}`];
-            const cantidad = orden[`cantidad_${i}`];
-            if (tipoRecurso !== "Recurso de Requisición") {
-                const producto = allProducts.find(p => 
-                    p.id === orden[`recurso_id_${i}`] && 
-                    p.tipo === tipoRecurso
-                );
-                
-                if (producto) {
-                    tempProductosId.push(producto.id);
-                    tempProductosTipo.push(producto.tipo);
-                    if (cantidad) tempProductosCantidad.push(cantidad);
-                }
-            }
-        }    
+        const product_1 = allProducts.find(product => product.id == consulta_id[0].recurso_id_1 && product.tipo == consulta_id[0].tipo_recurso1 && consulta_id[0].tipo_recurso1 != "Recurso de Requisición");
+        const product_2 = allProducts.find(product => product.id == consulta_id[0].recurso_id_2 && product.tipo == consulta_id[0].tipo_recurso2 && consulta_id[0].tipo_recurso2 != "Recurso de Requisición");
+        const product_3 = allProducts.find(product => product.id == consulta_id[0].recurso_id_3 && product.tipo ==consulta_id[0].tipo_recurso3 &&  consulta_id[0].tipo_recurso3 != "Recurso de Requisición");
+        const product_4 = allProducts.find(product => product.id == consulta_id[0].recurso_id_4 && product.tipo == consulta_id[0].tipo_recurso4 &&consulta_id[0].tipo_recurso4 != "Recurso de Requisición");
+        const product_5 = allProducts.find(product => product.id == consulta_id[0].recurso_id_5 && product.tipo == consulta_id[0].tipo_recurso5 && consulta_id[0].tipo_recurso5 != "Recurso de Requisición");
+
+        const tempProductosId = [product_1?.id,product_2?.id,product_3?.id,product_4?.id,product_5?.id].filter(elemento => elemento != null)
+        const tempProductosTipo = [product_1?.tipo,product_2?.tipo,product_3?.tipo,product_4?.tipo,product_5?.tipo].filter(elemento => elemento != null)
+        const tempProductosCantidad = [consulta_id[0]?.cantidad_1,consulta_id[0]?.cantidad_2,consulta_id[0]?.cantidad_3,consulta_id[0]?.cantidad_4,consulta_id[0]?.cantidad_5].filter(elemento => elemento != null)
         
         for (let i=0;i<tempProductosId.length;i++){
 
             if (tempProductosTipo[i].includes('Producto')) {
 
-                const consulta = 'update productos set unidades = Unidades + ? where Id_producto = ?'
+                const consulta = 'update productos set unidades = COALESCE(Unidades, 0) + ? where Id_producto = ?'
                 await pool.query(consulta,[tempProductosCantidad[i],tempProductosId[i]])
 
             } else if (tempProductosTipo[i].includes('Instrumento')) {

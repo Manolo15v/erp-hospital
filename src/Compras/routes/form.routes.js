@@ -7,6 +7,6 @@ const router = Router();
 router.get("/Orders/:id", getOrdersResults)
 router.get("/Products/:id",getProductsResults)
 router.get("/Requirements/:id",getRequirementsResults)
-router.get("/Suppliers/:id",getOrdersResults)
+router.get("/Suppliers/:id",getSuppliersResults)
 
 export default router

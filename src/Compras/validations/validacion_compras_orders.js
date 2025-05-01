@@ -12,27 +12,21 @@ export async function searchSuppliers(nameSupplier) {
 }
 
 export async function searchProductsId(nameProduct) {
-    if (!allProductsCache) {
-        allProductsCache = await totalizeProducts();
-    }
+    allProductsCache = await totalizeProducts();
     const recurso_id = allProductsCache.find(product => product.nombre == nameProduct)?.id;
 
     return recurso_id;
 }
 
 export async function searchProductsType(nameProduct) {
-    if (!allProductsCache) {
-        allProductsCache = await totalizeProducts();
-    }
+    allProductsCache = await totalizeProducts();
     const tipo_recurso = allProductsCache.find(product => product.nombre == nameProduct)?.tipo;
 
     return tipo_recurso;
 }
 
 export async function validations_orders(newOrder) {
-    if (!allProductsCache) {
-        allProductsCache = await totalizeProducts();
-    }
+    allProductsCache = await totalizeProducts();
     const recursos_nombres = [];
     let recursos_precios = [];
     let recursos_cantidad = [];
@@ -117,9 +111,7 @@ export async function validations_orders(newOrder) {
 
 export async function validations_orders_modificate(newOrder) {
 
-    if (!allProductsCache) {
-        allProductsCache = await totalizeProducts();
-    }
+    allProductsCache = await totalizeProducts();
 
     const recursos_nombres = [];
     let recursos_precios = [];

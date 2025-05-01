@@ -18,9 +18,7 @@ export const suppliers = async (req, res) => {
 
 export const products = async (req, res) => {
     try {
-        if (!dataCache) {
-            dataCache = await totalizeProducts();
-        }
+        dataCache = await totalizeProducts();
         if (!dataCache || dataCache.length == 0) {
             return res.status(404).json({ error: 'No encontrado' });
         }
@@ -32,9 +30,7 @@ export const products = async (req, res) => {
 
 export const orders = async (req, res) => {
     try {
-        if (!dataCache) {
-            dataCache = await totalizeProducts();
-        }
+        dataCache = await totalizeProducts();
         const data =  await loadOrders(dataCache)
         if (!data || data.length == 0) {
             return res.status(404).json({ error: 'No encontrado' });
@@ -47,9 +43,7 @@ export const orders = async (req, res) => {
 
 export const requirements = async (req, res) => {
     try {
-        if (!dataCache) {
-            dataCache = await totalizeProducts();
-        }
+        dataCache = await totalizeProducts();
         const data =  await loadRequirements(dataCache)
         if (!data || data.length == 0) {
             return res.status(404).json({ error: 'No encontrado' });
@@ -74,9 +68,7 @@ export const empleoyees = async (req, res) => {
 
 export const allData = async (req, res) => {
     try {
-        if (!dataCache) {
-            dataCache = await totalizeProducts();
-        }
+        dataCache = await totalizeProducts();
         const allOrders = await loadOrders(dataCache)
         const allRequirements = await loadRequirements(dataCache)
         let currentMonth = new Date().getMonth();
