@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión Médica</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="./script.js"></script>
+</head>
+
+<body>
+    <div class="sidebar">
+        <h2>Módulo de Laboratorio</h2>
+        <div class="menu-item" onclick="showSection('patients')">Pacientes</div>
+        <div class="menu-item" onclick="showSection('results')">Resultados</div>
+        <div class="menu-item" onclick="showSection('history')">Historial</div>
+        <div class="menu-item" onclick="showSection('tests')">Gestión de Pruebas</div>
+    </div>
+
+    <div class="main-content">
+        <!-- Sección Pacientes -->
+        <div id="patients" class="section">
+            <h1>Registro de Paciente</h1>
+            <form id="patientForm" onsubmit="return handlePatientForm(event)">
+                <div class="form-grid">
+                    <div>
+                        <div class="input-group">
+                            <label for="nombre">Nombre *</label>
+                            <input type="text" id="nombre" name="nombre" required placeholder="Ingrese el nombre">
+                        </div>
+                        <div class="input-group">
+                            <label for="id">Identificación *</label>
+                            <input type="text" id="id" name="id" required placeholder="Número de identificación">
+                        </div>
+                        <div class="input-group">
+                            <label>Género</label>
+                            <select name="genero">
+                                <option value="">Seleccione el género</option>
+                                <option value="Masculino">Masculino</option>
+                                <option value="Femenino">Femenino</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="input-group">
+                            <label for="apellido">Apellido *</label>
+                            <input type="text" id="apellido" name="apellido" required placeholder="Ingrese el apellido">
+                        </div>
+                        <div class="input-group">
+                            <label for="fechaNacimiento">Fecha de Nacimiento *</label>
+                            <input type="date" id="fechaNacimiento" name="fechaNacimiento" required
+                                placeholder="dd/mm/yyyy">
+                        </div>
+                        <div class="input-group">
+                            <label for="telefono">Teléfono</label>
+                            <input type="tel" id="telefono" name="telefono" pattern="[0-9]{11}"
+                                placeholder="11 dígitos">
+                        </div>
+                    </div>
+                </div>
+                <button type="submit">Registrar Paciente</button>
+            </form>
+
+            <h2 style="margin-top: 30px;">Pacientes Recientes</h2>
+            <div id="patient-cards"></div>
+        </div>
+        <!-- <h1>Registro de Paciente</h1>
+        <div class="form-grid">
+            <div>
+                <div class="input-group">
+                    <label for="nombre">Nombre *</label>
+                    <input type="text" id="nombre" name="nombre" required placeholder="Ingrese el nombre">
+                </div>
+                <div class="input-group">
+                    <label for="id">Identificación *</label>
+                    <input type="text" id="id" name="id" required placeholder="Número de identificación">
+                </div>
+                <div class="input-group">
+                    <label>Género</label>
+                    <select>
+                        <option>Seleccione el género</option>
+                        <option>Masculino</option>
+                        <option>Femenino</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <div class="input-group">
+                    <label for="apellido">Apellido *</label>
+                    <input type="text" id="apellido" name="apellido" required placeholder="Ingrese el apellido">
+                </div>
+                <div class="input-group">
+                    <label for="fechaNacimiento">Fecha de Nacimiento</label>
+                    <input type="date" id="fechaNacimiento" name="fechaNacimiento" required placeholder="mm/dd/yyyy">
+                </div>
+                <div class="input-group">
+                    <label for="telefono">Teléfono</label>
+                    <input type="tel" id="telefono" name="telefono" pattern="[0-9]{10}" placeholder="11 dígitos">
+                </div>
+            </div>
+        </div>
+        <script src="script.js"></script>
+        <button>Registrar Paciente</button> -->
+
+        <!-- <h2 style="margin-top: 30px;">Pacientes Recientes</h2> -->
+        <!-- Dynamic patient cards -->
+        <!-- <div id="patient-cards"></div> -->
+        <!-- </div> -->
+
+        <!-- Sección Resultados -->
+        <div id="results" class="section" style="display: none;">
+            <h1>Registro de Resultados</h1>
+            <table id="results-table">
+                <tr>
+                    <th>Paciente</th>
+                    <th>Examen Pendiente</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                </tr>
+                <tbody id="results-body"></tbody>
+            </table>
+        </div>
+
+        <!-- Sección Historial -->
+        <div id="history" class="section" style="display: none;">
+            <h1>Historial de Exámenes</h1>
+            <div class="form-grid">
+                <div>
+                    <label for="nombrePaciente">Nombre del paciente</label>
+                    <input type="text" placeholder="Nombre del paciente" name="nombrePaciente">
+                </div>
+                <div>
+                    <label for="fechaExamen">Fecha del examen</label>
+                    <input type="date" id="fechaExamen" name="fechaExamen" required placeholder="dd/mm/yyyy">
+                </div>
+                <div>
+                    <label for="estado">Estado</label>
+                    <select>
+                        <option value="Todos">Todos los estados</option>
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Completado">Completado</option>
+                    </select>
+                </div>
+            </div>
+            <table>
+                <tr>
+                    <th>Paciente</th>
+                    <th>Tipo de Examen</th>
+                    <th>Fecha Solicitud</th>
+                    <th>Estado</th>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Sección Gestión de Pruebas -->
+        <div id="tests" class="section" style="display: none;">
+            <h1>Gestión de Pruebas</h1>
+            <div class="input-group">
+                <div>
+                    <label for="nombrePrueba">Nombre de la prueba</label>
+                    <input type="text" name="nombrePrueba" placeholder="Nombre de la prueba">
+                </div>
+                <div>
+                    <label for="descripcion">Descripción</label>
+                    <textarea name="descripcion" placeholder="Descripción"></textarea>
+                </div>
+            </div>
+            <button style="margin-bottom: 20px;">Agregar nueva prueba</button>
+            <div class="">
+                <h3>Pruebas disponibles</h3>
+                <div class="patient-card">
+                    <h3>Hemograma completo</h3>
+                    <p>Análisis completo de células sanguíneas</p>
+                    <button style="background-color: #6c757d; margin-right: 10px;">Editar</button>
+                    <button style="background-color: #dc3545;">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

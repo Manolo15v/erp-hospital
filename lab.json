@@ -1,0 +1,67 @@
+{
+    "POST": {
+        "/laboratorio/solicitudes": {
+            "datos_ejemplo": {
+                "paciente_id": 1,
+                "tipo_id": 3,
+                "modulo_solicitante": "cardiologia",
+                "motivo": "Control post-cateterismo",
+                "observacion": "Requiere perfil lipídico completo"
+            }
+        },
+        "/laboratorio/resultados": {
+            "datos_ejemplo": {
+                "solicitud_id": 1,
+                "resultados": [
+                    {
+                        "parametro": "Colesterol Total",
+                        "valor": "190",
+                        "unidad": "mg/dL",
+                        "rango_referencial": "<200"
+                    },
+                    {
+                        "parametro": "Triglicéridos",
+                        "valor": "150",
+                        "unidad": "mg/dL",
+                        "rango_referencial": "<150"
+                    }
+                ]
+            }
+        },
+        "/laboratorio/pruebas": {
+            "datos_ejemplo": {
+                "nombre": "Panel Tiroideo",
+                "descripcion": "Pruebas de función tiroidea",
+                "preparacion": "Ayuno de 4 horas",
+                "precio": 120.50
+            }
+        }
+    },
+    "PUT": {
+        "/laboratorio/solicitudes/{id}/": {
+            "datos_ejemplo": {
+                "estado": "completado",
+                "observacion": "Resultados fuera de rango en triglicéridos"
+            }
+        },
+        "/laboratorio/resultados/{id}/": {
+            "datos_ejemplo": {
+                "valor": "148",
+                "observacion": "Corrección técnica de medición"
+            }
+        }
+    },
+    "DELETE": {
+        "/laboratorio/solicitudes/{id}/": {
+            "descripcion": "Eliminar una solicitud de laboratorio",
+            "parametros": {
+                "id": "integer",
+                "modulo_solicitante": "string"
+            },
+            "response": {
+                "status": "string",
+                "message": "string"
+            }
+        }
+    }
+}
