@@ -28,7 +28,7 @@ async function Inventory() {
         `);
         return data
     } catch (error) {
-        throw new Error("Error en conseguir el inventario")
+        throw new Error("Error. en conseguir el inventario")
     }
 }
 
