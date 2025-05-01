@@ -1,5 +1,5 @@
 import { Router}  from "express";
-import{getAllCitas, borrarCita} from "../controllers/historial.controllers.js";
+import{getAllCitas, borrarCita} from "../controllers/historial.controller.js";
 
 const router= Router();
 

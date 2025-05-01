@@ -88,11 +88,9 @@ app.use(stc("public"));
 
 //Citas
 
-
 app.use("/api/citas/historial", historialRoutes); // Rutas para el historial de citas
 app.use("/api/citas/reprogramar", reprogramarRoutes); // Rutas para reprogramar citas
 app.use("/api/citas", citasRoutes); // Rutas generales para citas
-
 
 //Compras
 
