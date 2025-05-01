@@ -38,9 +38,9 @@ import repuestosRoutes from "./Inventario/routes/repuestos.routes.js"
 
 //Mantenimiento
 
-import mantenimientoRoute from './mantenimiento/routes/mantenimientoRoute.js';
-import reporteRoute from './mantenimiento/routes/reporteRoute.js'
-import ordenesTrabajoRoute from './mantenimiento/routes/ordenesRoute.js'
+import mantenimientoRoute from './Mantenimiento/routes/mantenimientoRoute.js';
+import reporteRoute from './Mantenimiento/routes/reporteRoute.js'
+import ordenesTrabajoRoute from './Mantenimiento/routes/ordenesRoute.js'
 
 //Personal
 
