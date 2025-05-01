@@ -21,6 +21,16 @@ import citasRoutes from "./Citas/routes/citas.routes.js";
 
 //Compras
 
+import proveedoresRoutes from "./Compras/routes/proveedores.routes.js"
+import recursosRoutes from "./Compras/routes/recursos.routes.js";
+import orderRoutes from "./Compras/routes/orders.routes.js"
+import requirementsRoutes from "./Compras/routes/requirements.routes.js"
+import inventoryRoutes from "./Compras/routes/inventory.routes.js"
+import tableRoutes from "./Compras/routes/table.routes.js"
+import updateRoutes from "./Compras/routes/update.routes.js"
+import formRoutes from "./Compras/routes/form.routes.js"
+import utilsRoutes from "./Compras/routes/utils.routes.js"
+
 //Consultas Medicas
 
 //Consultas Odontologicas
@@ -102,6 +112,16 @@ app.use("/api/citas/reprogramar", reprogramarRoutes); // Rutas para reprogramar 
 app.use("/api/citas", citasRoutes); // Rutas generales para citas
 
 //Compras
+
+app.use("/api/compras/proveedores", proveedoresRoutes);
+app.use("/api/compras/recursos", recursosRoutes);
+app.use("/api/compras/ordenes",orderRoutes);
+app.use("/api/compras/requisitorias",requirementsRoutes);
+app.use("/api/compras/inventario",inventoryRoutes)
+app.use("/api/compras/tabla", tableRoutes)
+app.use("/api/compras/actualizar",updateRoutes)
+app.use("/api/compras/formulario",formRoutes)
+app.use("/api/compras/utiles",utilsRoutes)
 
 //Consultas Medicas
 
