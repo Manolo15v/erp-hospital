@@ -20,7 +20,6 @@ export const obtenerMantenimientos = () => {
     
     connection.query(query, (error, results, fields) => {
       if (error) {
-        console.error('Error en la consulta SQL:', error);
         return reject({
           message: 'Error al obtener mantenimientos',
           status: 500,
@@ -187,7 +186,6 @@ export const cambiarEstadoEliminado = async (id) => {
   return new Promise((resolve, reject) => {
     const query = 'UPDATE mantenimiento_equipos SET estado = ? WHERE mantenimiento_id = ?';
     const nuevoEstado = 'Eliminado';
-
     connection.query(query, [nuevoEstado, id], (error, result) => {
       if (error) return reject(error);
       resolve(result.affectedRows > 0);
@@ -199,7 +197,6 @@ export const cambiarEstadoCompletado = async (id) => {
   return new Promise((resolve, reject) => {
     const query = 'UPDATE mantenimiento_equipos SET estado = ? WHERE mantenimiento_id = ?';
     const nuevoEstado = 'Completado';
-
     connection.query(query, [nuevoEstado, id], (error, result) => {
       if (error) return reject(error);
       resolve(result.affectedRows > 0);

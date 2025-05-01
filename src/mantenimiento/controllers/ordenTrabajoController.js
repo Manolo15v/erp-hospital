@@ -1,4 +1,4 @@
-import { cambiarPrioridadCompletado, crearOrdenTrabajo, eliminarOrdenTrabajo, obtenerEmpleado, obtenerOrdenesTrabajo } 
+import { cambiarPrioridadCompletado, cambiarPrioridadEliminada, crearOrdenTrabajo, obtenerEmpleado, obtenerOrdenesTrabajo } 
     from "../models/ordenTrabajoModel.js";
 
 export const crearOrdenTrabajoController = async (req, res) => {
@@ -31,13 +31,18 @@ export const ordenesTrabajoController = async (req, res) => {
     }
 };
 
-export const eliminarOrdenTrabajoController = async (req, res) => {
+export const cambiarPrioridadEliminadaController = async (req, res) => {
   try {
     const { id } = req.params;
-    await eliminarOrdenTrabajo(id);
-    res.json({ success: true });
+    const actualizado = await cambiarPrioridadEliminada(id);
+
+    if (!actualizado) {
+      return res.status(404).json({ success: false, error: 'Solicitud no encontrada' });
+    }
+
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Error al eliminar la orden' });
+    console.error('Error al actualizar el estado:', error);
+    res.status(500).json({ success: false, error: 'Error al actualizar el estado' });
   }
 };
 
@@ -50,7 +55,6 @@ export const cambiarPrioridadController = async (req, res) => {
         return res.status(404).json({ success: false, error: 'Solicitud no encontrada' });
       }
   
-      res.json({ success: true });
     } catch (error) {
       console.error('Error al actualizar el estado:', error);
       res.status(500).json({ success: false, error: 'Error al actualizar el estado' });

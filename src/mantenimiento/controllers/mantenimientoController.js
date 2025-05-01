@@ -13,10 +13,6 @@ import { obtenerMantenimientos,
 export const listarMantenimientos = async (req, res) => {
   try {
     const mantenimientos = await obtenerMantenimientos();
-    if (!Array.isArray(mantenimientos)) {
-      throw new Error('La respuesta no es un array válido');
-    }
-    
     res.json(mantenimientos);
   } catch (error) {
     res.status(error.status || 500).json({
@@ -68,11 +64,7 @@ export const registrarMantenimiento = async (req, res) => {
       Id_Modelo: body.Id_Modelo,  
       Id_Repuesto: body.Id_Repuesto ? parseInt(body.Id_Repuesto) : null
     };
-
-    console.log('Datos a insertar:', datosMantenimiento);
-
     const mantenimientoId = await crearOrdenMantenimiento(datosMantenimiento);
-
     res.status(201).json({
       success: true,
       message: 'Mantenimiento registrado correctamente',
@@ -80,12 +72,6 @@ export const registrarMantenimiento = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error detallado al registrar mantenimiento:', {
-      message: error.message,
-      stack: error.stack,
-      sqlError: error.sqlMessage || 'No es error de SQL'
-    });
-    
     res.status(500).json({
       success: false,
       error: 'Error al registrar el mantenimiento',
@@ -101,7 +87,6 @@ export const eliminarMantenimiento = async (req, res) => {
   try {
     const { id } = req.params;
     await eliminarOrdenMantenimiento(id);
-    res.json({ success: true });
   } catch (error) {
     res.status(500).json({ success: false, error: 'Error al eliminar la orden' });
   }
@@ -125,7 +110,6 @@ export const obtenerMantenimientoEdicion = async (req, res) => {
     });
 
   } catch (error) {
-    console.error(error);
     res.status(500).json({
       success: false,
       error: 'Error al cargar los datos del mantenimiento',
@@ -158,11 +142,7 @@ export const actualizarMantenimientoController = async (req, res) => {
       Id_Modelo: body.Id_Modelo,  // Este lo usas para buscar Id_Equipo en el modelo
       Id_Repuesto: body.Id_Repuesto ? parseInt(body.Id_Repuesto) : null
     };
-
-    console.log('Datos para actualización:', datosActualizacion);
-
     const resultado = await actualizarMantenimiento(id, datosActualizacion);
-
     res.status(200).json({
       success: true,
       message: 'Mantenimiento actualizado correctamente',
@@ -170,12 +150,6 @@ export const actualizarMantenimientoController = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error detallado al actualizar mantenimiento:', {
-      message: error.message,
-      stack: error.stack,
-      sqlError: error.sqlMessage || 'No es error de SQL'
-    });
-
     res.status(500).json({
       success: false,
       error: 'Error al actualizar el mantenimiento',

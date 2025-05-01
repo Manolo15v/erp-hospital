@@ -68,14 +68,16 @@ export const obtenerEmpleado = () => {
   });
 };
 
-export const eliminarOrdenTrabajo = async (id) => {
-    return new Promise((resolve, reject) => {
-        const query = 'DELETE FROM ordenes_trabajo WHERE orden_id = ?';
-        connection.query(query, [id], (error, results) => {
-        if (error) return reject(error);
-        resolve(results.affectedRows > 0);
-        });
+export const cambiarPrioridadEliminada = async (id) => {
+  return new Promise((resolve, reject) => {
+    const query = 'UPDATE ordenes_trabajo SET prioridad = ? WHERE orden_id = ?';
+    const nuevoEstado = 'Eliminada';
+
+    connection.query(query, [nuevoEstado, id], (error, result) => {
+      if (error) return reject(error);
+      resolve(result.affectedRows > 0);
     });
+  });
 };
 
 export const cambiarPrioridadCompletado = async (id) => {

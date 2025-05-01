@@ -23,7 +23,6 @@ export const listado_ordenes = () => {
         });
       }
       resolve(results || []); 
-      console.table(results)
     });
   });
 };
