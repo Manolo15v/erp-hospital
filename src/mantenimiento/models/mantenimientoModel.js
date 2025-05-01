@@ -1,4 +1,4 @@
-import connection from '../database.js'
+import { pool } from '../../db.js'
 
 export const obtenerMantenimientos = () => {
   return new Promise((resolve, reject) => {
@@ -18,7 +18,7 @@ export const obtenerMantenimientos = () => {
         left join repuestos on mantenimiento_equipos.Id_Repuesto = repuestos.Id_Repuesto
         `;
     
-    connection.query(query, (error, results, fields) => {
+      pool.query(query, (error, results, fields) => {
       if (error) {
         return reject({
           message: 'Error al obtener mantenimientos',
@@ -47,7 +47,7 @@ export const obtenerEquipos = () => {
 export const obtenerRepuestos = () => {
   return new Promise((resolve, reject) => {
     const query = 'SELECT Id_Repuesto, nombre FROM repuestos';
-    connection.query(query, (error, results) => {
+    pool.query(query, (error, results) => {
       if (error) return reject(error);
       resolve(results);
     });
@@ -56,7 +56,7 @@ export const obtenerRepuestos = () => {
 
 export const crearOrdenMantenimiento = (datos) => {
   return new Promise((resolve, reject) => {
-    connection.query(
+    pool.query(
       `SELECT Id_Equipo FROM equipos 
        WHERE Id_Modelo = ?
        LIMIT 1`,
@@ -101,7 +101,7 @@ export const crearOrdenMantenimiento = (datos) => {
 export const eliminarOrdenMantenimiento = async (id) => {
   return new Promise((resolve, reject) => {
     const query = 'DELETE FROM mantenimiento_equipos WHERE mantenimiento_id = ?';
-    connection.query(query, [id], (error, results) => {
+    pool.query(query, [id], (error, results) => {
       if (error) return reject(error);
       resolve(results.affectedRows > 0);
     });
@@ -114,7 +114,7 @@ export const obtenerIdEdicion = (id) => {
                     FROM mantenimiento_equipos
                     LEFT JOIN equipos ON mantenimiento_equipos.Id_Equipo = equipos.Id_Equipo
                     WHERE mantenimiento_equipos.mantenimiento_id = ?`;
-    connection.query(query, [id], (error, results) => {
+      pool.query(query, [id], (error, results) => {
       if (error) return reject(error);
       if (results.length === 0) return reject(new Error('Mantenimiento no encontrado'));
       resolve(results[0]);
@@ -124,7 +124,7 @@ export const obtenerIdEdicion = (id) => {
 
 export const actualizarMantenimiento = (id, datos) => {
   return new Promise((resolve, reject) => {
-    connection.query(
+    pool.query(
       `SELECT Id_Equipo FROM equipos 
        WHERE Id_Modelo = ? 
        LIMIT 1`,
@@ -158,7 +158,7 @@ export const actualizarMantenimiento = (id, datos) => {
           id
         ];
 
-        connection.query(query, values, (error, results) => {
+        pool.query(query, values, (error, results) => {
           if (error) return reject(error);
           if (results.affectedRows === 0) {
             return reject(new Error('Mantenimiento no encontrado o no actualizado'));
@@ -175,7 +175,7 @@ export const cambiarEstadoSolicitud = async (id) => {
     const query = 'UPDATE mantenimiento_equipos SET estado = ? WHERE mantenimiento_id = ?';
     const nuevoEstado = 'En proceso';
 
-    connection.query(query, [nuevoEstado, id], (error, result) => {
+    pool.query(query, [nuevoEstado, id], (error, result) => {
       if (error) return reject(error);
       resolve(result.affectedRows > 0);
     });
@@ -186,7 +186,7 @@ export const cambiarEstadoEliminado = async (id) => {
   return new Promise((resolve, reject) => {
     const query = 'UPDATE mantenimiento_equipos SET estado = ? WHERE mantenimiento_id = ?';
     const nuevoEstado = 'Eliminado';
-    connection.query(query, [nuevoEstado, id], (error, result) => {
+    pool.query(query, [nuevoEstado, id], (error, result) => {
       if (error) return reject(error);
       resolve(result.affectedRows > 0);
     });
@@ -197,7 +197,7 @@ export const cambiarEstadoCompletado = async (id) => {
   return new Promise((resolve, reject) => {
     const query = 'UPDATE mantenimiento_equipos SET estado = ? WHERE mantenimiento_id = ?';
     const nuevoEstado = 'Completado';
-    connection.query(query, [nuevoEstado, id], (error, result) => {
+    pool.query(query, [nuevoEstado, id], (error, result) => {
       if (error) return reject(error);
       resolve(result.affectedRows > 0);
     });

@@ -100,7 +100,7 @@ app.use("/api/inventario/repuestos", repuestosRoutes);
 
 //Mantenimiento
 
-app.use('/api/mantenimiento/mantenimientos', mantenimientoRoute);
+app.use('/api/mantenimiento/mantenimiento', mantenimientoRoute);
 app.use('/api/mantenimiento/ordenes', ordenesTrabajoRoute);
 app.use('/api/mantenimiento/reporte', reporteRoute);
 
