@@ -1,3 +1,4 @@
+
 import express,  {static as stc, json} from "express";
 import morgan from "morgan";
 import cors from "cors"; 
@@ -13,6 +14,11 @@ Cada Router va a contener una parte de la api (el backend) y cada router va esta
 //Administracion
 
 //Citas
+
+import historialRoutes from "./Citas/routes/historial.routes.js";
+import reprogramarRoutes from "./Citas/routes/reprogramar.routes.js";
+import citasRoutes from "./Citas/routes/citas.routes.js";
+
 
 //Compras
 
@@ -31,6 +37,14 @@ import solicitudesLabRoutes from "./Consultas_Odontologicas/routes/solicitudes_l
 
 //Hospitalizacion
 
+import camasRoutes from "./Hospitalizacion/routes/camas.routes.js";
+import habitacionesRoutes from "./Hospitalizacion/routes/habitaciones.routes.js";
+import hospitalizacionesRoutes from "./Hospitalizacion/routes/hospitalizaciones.routes.js";
+import examenesRoutes from "./Hospitalizacion/routes/examenes_hospitalizacion.routes.js";
+import signosVitalesRoutes from "./Hospitalizacion/routes/signos_vitales.routes.js";
+import pacientesRoutes from "./Hospitalizacion/routes/pacientes.routes.js";
+import listaEsperaRoutes from "./Hospitalizacion/routes/lista_espera_hospitalizacion.routes.js";
+
 //Inventario
 
 import almacenRoutes from "./Inventario/routes/almacen.routes.js"
@@ -48,8 +62,10 @@ import repuestosRoutes from "./Inventario/routes/repuestos.routes.js"
 //Mantenimiento
 
 //Personal
-
-
+import empleadosRoutes from "./Personal/routes/empleados.routes.js";
+import especialidadesRoutes from "./Personal/routes/especialidades.routes.js";
+import rolesRoutes from "./Personal/routes/roles.routes.js";
+import pagosEmpleadosRoutes from "./Personal/routes/pagos_empleados.routes.js";
 
 /*
 
@@ -81,6 +97,10 @@ app.use(stc("public"));
 
 //Citas
 
+app.use("/api/citas/historial", historialRoutes); // Rutas para el historial de citas
+app.use("/api/citas/reprogramar", reprogramarRoutes); // Rutas para reprogramar citas
+app.use("/api/citas", citasRoutes); // Rutas generales para citas
+
 //Compras
 
 //Consultas Medicas
@@ -88,6 +108,14 @@ app.use(stc("public"));
 //Consultas Odontologicas
 
 //Hospitalizacion
+
+app.use("/api/hospitalizacion/camas", camasRoutes);
+app.use("/api/hospitalizacion/habitaciones", habitacionesRoutes);
+app.use("/api/hospitalizacion/hospitalizaciones", hospitalizacionesRoutes);
+app.use("/api/hospitalizacion/examenes", examenesRoutes);
+app.use("/api/hospitalizacion/signosVitales", signosVitalesRoutes);
+app.use("/api/hospitalizacion/pacientes", pacientesRoutes);
+app.use("/api/hospitalizacion/listaEspera", listaEsperaRoutes);
 
 //Inventario
 
@@ -116,6 +144,10 @@ app.use("/api/consultas_odontologicas/solicitudes_lab", solicitudesLabRoutes)
 
 //Personal
 
+app.use('/api/personal/empleados', empleadosRoutes);
+app.use("/api/personal/especialidades", especialidadesRoutes);
+app.use("/api/personal/roles", rolesRoutes);
+app.use("/api/personal/pagos_empleados", pagosEmpleadosRoutes);
 
 // Middleware para manejar rutas no encontradas
 app.use((req, res, next) => {
