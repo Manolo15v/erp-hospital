@@ -30,8 +30,6 @@ export const createModelo = async (req, res) => {
   try {
     const { Modelo, Nombre, Descripcion, Codigo, Marca } = req.body;
 
-    console.log(req.body);
-    
 
     if (!Modelo || !Nombre || !Descripcion || !Codigo || !Marca ) {
       return res.status(400).json({ error: 'Todos los campos son requeridos' });
