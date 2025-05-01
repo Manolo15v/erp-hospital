@@ -122,7 +122,6 @@ app.use("/api/laboratorio/resultados", resultadosRoutes);
 app.use("/api/laboratorio/examenes", examenesRoutes);
 app.use("/api/laboratorio/pruebas", pruebasRoutes);
 
-
 //Mantenimiento
 
 //Personal
