@@ -20,6 +20,15 @@ Cada Router va a contener una parte de la api (el backend) y cada router va esta
 
 //Consultas Odontologicas
 
+import citasConsultasOdontoRoutes from "./Consultas_Odontologicas/routes/citas_consultas_odontologicas.routes.js";
+import consultasOdontologicasLabRoutes from "./Consultas_Odontologicas/routes/consultas_odontologicas.routes.js";
+import consumosConsultasOdontoRoutes from "./Consultas_Odontologicas/routes/consumos_consultas_odontologicas.routes.js";
+import dientesRoutes from "./Consultas_Odontologicas/routes/dientes.routes.js";
+import odontodiagramaRoutes from "./Consultas_Odontologicas/routes/odontodiagrama.routes.js";
+import sectoresRoutes from "./Consultas_Odontologicas/routes/sectores.routes.js";
+import segmentosRoutes from "./Consultas_Odontologicas/routes/segmentos.routes.js";
+import solicitudesLabRoutes from "./Consultas_Odontologicas/routes/solicitudes_lab_odontologicas.routes.js";
+
 //Hospitalizacion
 
 //Inventario
@@ -93,6 +102,15 @@ app.use("/api/inventario/productosUbicacion", productosUbicacionRoutes);
 app.use("/api/inventario/repuestos", repuestosRoutes);
 
 //Laboratorio
+
+app.use("/api/consultas_odontologicas/citas", citasConsultasOdontoRoutes)
+app.use("/api/consultas_odontologicas/consultas", consultasOdontologicasLabRoutes)
+app.use("/api/consultas_odontologicas/consumos", consumosConsultasOdontoRoutes)
+app.use("/api/consultas_odontologicas/dientes", dientesRoutes)
+app.use("/api/consultas_odontologicas/odontodiagrama", odontodiagramaRoutes)
+app.use("/api/consultas_odontologicas/sectores", sectoresRoutes)
+app.use("/api/consultas_odontologicas/segmentos", segmentosRoutes)
+app.use("/api/consultas_odontologicas/solicitudes_lab", solicitudesLabRoutes)
 
 //Mantenimiento
 
