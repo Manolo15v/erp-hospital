@@ -100,9 +100,9 @@ app.use("/api/inventario/repuestos", repuestosRoutes);
 
 //Mantenimiento
 
-app.use('/api/mantenimiento', mantenimientoRoute);
-app.use('/api/ordenes', ordenesTrabajoRoute);
-app.use('/api/reporte', reporteRoute);
+app.use('/api/mantenimiento/mantenimiento', mantenimientoRoute);
+app.use('/api/mantenimiento/ordenes', ordenesTrabajoRoute);
+app.use('/api/mantenimiento/reporte', reporteRoute);
 
 //Personal
 

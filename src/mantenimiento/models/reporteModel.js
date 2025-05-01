@@ -1,4 +1,4 @@
-import connection from '../database.js'
+import { pool } from '../../db.js'
 
 export const listado_ordenes = () => {
   return new Promise((resolve, reject) => {
@@ -13,7 +13,7 @@ export const listado_ordenes = () => {
       left join empleados on empleados.empleado_id = ordenes_trabajo.empleado_id
     `;
     
-    connection.query(query, (error, results, fields) => {
+    pool.query(query, (error, results, fields) => {
       if (error) {
         console.error('Error en la consulta SQL:', error);
         return reject({

@@ -1,4 +1,4 @@
-import connection from '../database.js'
+import { pool } from '../../db.js'
 
 export const obtenerOrdenesTrabajo = (prioridad = '') => {
     return new Promise((resolve, reject) => {
@@ -22,7 +22,7 @@ export const obtenerOrdenesTrabajo = (prioridad = '') => {
 
     query += ` ORDER BY ordenes_trabajo.fecha_ejecucion DESC`;
 
-    connection.query(query, (error, results) => {
+    pool.query(query, (error, results) => {
         if (error) {
             console.error('Error en la consulta SQL:', error);
             return reject({
@@ -51,7 +51,7 @@ export const crearOrdenTrabajo = (datos) => {
         datos.prioridad || 'En proceso',
         ];
 
-        connection.query(query, values, (error, results) => {
+        pool.query(query, values, (error, results) => {
         if (error) return reject(error);
         resolve(results.insertId);
         });
@@ -61,7 +61,7 @@ export const crearOrdenTrabajo = (datos) => {
 export const obtenerEmpleado = () => {
   return new Promise((resolve, reject) => {
       const query = `SELECT empleado_id, concat(nombre, ' ', apellido) as personal FROM empleados WHERE area = 'Mantenimiento'`;
-      connection.query(query, (error, results) => {
+      pool.query(query, (error, results) => {
       if (error) return reject(error);
       resolve(results);
       });
@@ -73,7 +73,7 @@ export const cambiarPrioridadEliminada = async (id) => {
     const query = 'UPDATE ordenes_trabajo SET prioridad = ? WHERE orden_id = ?';
     const nuevoEstado = 'Eliminada';
 
-    connection.query(query, [nuevoEstado, id], (error, result) => {
+    pool.query(query, [nuevoEstado, id], (error, result) => {
       if (error) return reject(error);
       resolve(result.affectedRows > 0);
     });
@@ -85,7 +85,7 @@ export const cambiarPrioridadCompletado = async (id) => {
       const query = 'UPDATE ordenes_trabajo SET prioridad = ? WHERE orden_id = ?';
       const nuevoEstado = 'Completado';
   
-      connection.query(query, [nuevoEstado, id], (error, result) => {
+      pool.query(query, [nuevoEstado, id], (error, result) => {
         if (error) return reject(error);
         resolve(result.affectedRows > 0);
       });
