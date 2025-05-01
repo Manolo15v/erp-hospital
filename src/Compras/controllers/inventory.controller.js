@@ -33,6 +33,7 @@ async function Inventory() {
 }
 
 export const getAllInventory = async (req, res) => {
+    
     try {
         const allProducts = await totalizeProducts()
         const allOrders = await loadOrders(allProducts)
