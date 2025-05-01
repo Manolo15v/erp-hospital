@@ -1,7 +1,6 @@
-
-import express,  {static as stc, json} from "express";
+import express, { static as stc, json } from "express";
 import morgan from "morgan";
-import cors from "cors"; 
+import cors from "cors";
 
 /*
 
@@ -21,6 +20,16 @@ import citasRoutes from "./Citas/routes/citas.routes.js";
 
 
 //Compras
+
+import proveedoresRoutes from "./Compras/routes/proveedores.routes.js"
+import recursosRoutes from "./Compras/routes/recursos.routes.js";
+import orderRoutes from "./Compras/routes/orders.routes.js"
+import requirementsRoutes from "./Compras/routes/requirements.routes.js"
+import inventoryRoutes from "./Compras/routes/inventory.routes.js"
+import tableRoutes from "./Compras/routes/table.routes.js"
+import updateRoutes from "./Compras/routes/update.routes.js"
+import formRoutes from "./Compras/routes/form.routes.js"
+import utilsRoutes from "./Compras/routes/utils.routes.js"
 
 //Consultas Medicas
 
@@ -59,7 +68,17 @@ import repuestosRoutes from "./Inventario/routes/repuestos.routes.js"
 
 //Laboratorio
 
+import examenes_labRoutes from "./Laboratorio/routes/examenes.routes.js";
+import pruebasRoutes from "./Laboratorio/routes/pruebas.routes.js";
+import resultadosRoutes from "./Laboratorio/routes/resultados.routes.js";
+import pacienteRoutes from "./Laboratorio/routes/pacientes.routes.js";
+import solicitudesLaboratorioRoutes from "./Laboratorio/routes/solicitudes_laboratorio.routes.js";
+
 //Mantenimiento
+
+import mantenimientoRoute from './Mantenimiento/routes/mantenimientoRoute.js';
+import reporteRoute from './Mantenimiento/routes/reporteRoute.js'
+import ordenesTrabajoRoute from './Mantenimiento/routes/ordenesRoute.js'
 
 //Personal
 import empleadosRoutes from "./Personal/routes/empleados.routes.js";
@@ -79,7 +98,7 @@ Hacer la navegacion desde el front hacia las carpeta pages en un futuro
 const app = express();
 
 // Middlewares
-app.use(cors()); 
+app.use(cors());
 app.use(morgan("dev"));
 app.use(json());
 app.use(stc("public"));
@@ -103,9 +122,28 @@ app.use("/api/citas", citasRoutes); // Rutas generales para citas
 
 //Compras
 
+app.use("/api/compras/proveedores", proveedoresRoutes);
+app.use("/api/compras/recursos", recursosRoutes);
+app.use("/api/compras/ordenes",orderRoutes);
+app.use("/api/compras/requisitorias",requirementsRoutes);
+app.use("/api/compras/inventario",inventoryRoutes)
+app.use("/api/compras/tabla", tableRoutes)
+app.use("/api/compras/actualizar",updateRoutes)
+app.use("/api/compras/formulario",formRoutes)
+app.use("/api/compras/utiles",utilsRoutes)
+
 //Consultas Medicas
 
 //Consultas Odontologicas
+
+app.use("/api/consultas_odontologicas/citas", citasConsultasOdontoRoutes)
+app.use("/api/consultas_odontologicas/consultas", consultasOdontologicasLabRoutes)
+app.use("/api/consultas_odontologicas/consumos", consumosConsultasOdontoRoutes)
+app.use("/api/consultas_odontologicas/dientes", dientesRoutes)
+app.use("/api/consultas_odontologicas/odontodiagrama", odontodiagramaRoutes)
+app.use("/api/consultas_odontologicas/sectores", sectoresRoutes)
+app.use("/api/consultas_odontologicas/segmentos", segmentosRoutes)
+app.use("/api/consultas_odontologicas/solicitudes_lab", solicitudesLabRoutes)
 
 //Hospitalizacion
 
@@ -131,16 +169,17 @@ app.use("/api/inventario/repuestos", repuestosRoutes);
 
 //Laboratorio
 
-app.use("/api/consultas_odontologicas/citas", citasConsultasOdontoRoutes)
-app.use("/api/consultas_odontologicas/consultas", consultasOdontologicasLabRoutes)
-app.use("/api/consultas_odontologicas/consumos", consumosConsultasOdontoRoutes)
-app.use("/api/consultas_odontologicas/dientes", dientesRoutes)
-app.use("/api/consultas_odontologicas/odontodiagrama", odontodiagramaRoutes)
-app.use("/api/consultas_odontologicas/sectores", sectoresRoutes)
-app.use("/api/consultas_odontologicas/segmentos", segmentosRoutes)
-app.use("/api/consultas_odontologicas/solicitudes_lab", solicitudesLabRoutes)
+app.use("/api/laboratorio/solicitudesLaboratorio", solicitudesLaboratorioRoutes);
+app.use("/api/laboratorio/pacientes", pacienteRoutes);
+app.use("/api/laboratorio/resultados", resultadosRoutes);
+app.use("/api/laboratorio/examenes", examenes_labRoutes);
+app.use("/api/laboratorio/pruebas", pruebasRoutes);
 
 //Mantenimiento
+
+app.use('/api/mantenimiento/mantenimiento', mantenimientoRoute);
+app.use('/api/mantenimiento/ordenes', ordenesTrabajoRoute);
+app.use('/api/mantenimiento/reporte', reporteRoute);
 
 //Personal
 
