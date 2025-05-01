@@ -121,7 +121,9 @@ app.use('/api/personal/empleados', empleadosRoutes);
 app.use("/api/personal/especialidades", especialidadesRoutes);
 app.use("/api/personal/roles", rolesRoutes);
 app.use("/api/personal/pagos_empleados", pagosEmpleadosRoutes);
-app.use("/api/personal/usuarios",usuariosRoutes);
+
+//Usuarios
+app.use("/api/usuarios", usuariosRoutes);
 
 // Middleware para manejar rutas no encontradas
 app.use((req, res, next) => {

@@ -1,12 +1,16 @@
 import { Router } from "express";
-import { cargar,agregar,actualizar,obtener,actualizarClave} from "../controllers/usuarios.controller.js";
+import { getAll, getById, logIn, signIn, updateById } from "../controllers/usuarios.controller.js";
 
 const router = Router();
 
-router.get("/",cargar);
-router.post("/",agregar);
-router.put("/:id",actualizar);
-router.put("/clave/:id",actualizarClave);
-router.get("/:id",obtener);
+router.get("/", getAll);
+router.get("/:id", getById);
+
+router.post("/signup", signIn);
+router.post("/login", logIn);
+
+router.put("/:id", updateById);
+
+router.delete("/:id", );
 
 export default router;
