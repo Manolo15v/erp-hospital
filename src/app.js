@@ -16,6 +16,16 @@ Cada Router va a contener una parte de la api (el backend) y cada router va esta
 
 //Compras
 
+import proveedoresRoutes from "./Compras/routes/proveedores.routes.js"
+import recursosRoutes from "./Compras/routes/recursos.routes.js";
+import orderRoutes from "./Compras/routes/orders.routes.js"
+import requirementsRoutes from "./Compras/routes/requirements.routes.js"
+import inventoryRoutes from "./Compras/routes/inventory.routes.js"
+import tableRoutes from "./Compras/routes/table.routes.js"
+import updateRoutes from "./Compras/routes/update.routes.js"
+import formRoutes from "./Compras/routes/form.routes.js"
+import utilsRoutes from "./Compras/routes/utils.routes.js"
+
 //Consultas Medicas
 
 //Consultas Odontologicas
@@ -73,6 +83,16 @@ app.use(stc("public"));
 //Citas
 
 //Compras
+
+app.use("/api/compras/proveedores", proveedoresRoutes);
+app.use("/api/compras/recursos", recursosRoutes);
+app.use("/api/compras/ordenes",orderRoutes);
+app.use("/api/compras/requisitorias",requirementsRoutes);
+app.use("/api/compras/inventario",inventoryRoutes)
+app.use("/api/compras/tabla", tableRoutes)
+app.use("/api/compras/actualizar",updateRoutes)
+app.use("/api/compras/formulario",formRoutes)
+app.use("/api/compras/utiles",utilsRoutes)
 
 //Consultas Medicas
 
