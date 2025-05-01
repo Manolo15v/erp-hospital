@@ -1,6 +1,6 @@
-import express,  {static as stc, json} from "express";
+import express, { static as stc, json } from "express";
 import morgan from "morgan";
-import cors from "cors"; 
+import cors from "cors";
 
 /*
 
@@ -44,6 +44,10 @@ import repuestosRoutes from "./Inventario/routes/repuestos.routes.js"
 
 //Laboratorio
 
+import examenesRoutes from "./Laboratorio/routes/examenes.routes.js";
+import pruebasRoutes from "./Laboratorio/routes/pruebas.routes.js";
+import resultadosRoutes from "./Laboratorio/routes/resultados.routes.js";
+import pacienteRoutes from "./Laboratorio/routes/pacientes.routes.js";
 import solicitudesLaboratorioRoutes from "./Laboratorio/routes/solicitudes_laboratorio.routes.js";
 
 //Mantenimiento
@@ -64,7 +68,7 @@ Hacer la navegacion desde el front hacia las carpeta pages en un futuro
 const app = express();
 
 // Middlewares
-app.use(cors()); 
+app.use(cors());
 app.use(morgan("dev"));
 app.use(json());
 app.use(stc("public"));
@@ -113,6 +117,10 @@ app.use("/api/inventario/repuestos", repuestosRoutes);
 //Laboratorio
 
 app.use("/api/laboratorio/solicitudesLaboratorio", solicitudesLaboratorioRoutes);
+app.use("/api/laboratorio/pacientes", pacienteRoutes);
+app.use("/api/laboratorio/resultados", resultadosRoutes);
+app.use("/api/laboratorio/examenes", examenesRoutes);
+app.use("/api/laboratorio/pruebas", pruebasRoutes);
 
 //Mantenimiento
 
