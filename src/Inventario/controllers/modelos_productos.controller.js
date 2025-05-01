@@ -27,7 +27,6 @@ export const getById = async (req, res) => {
 
 export const createModelo = async (req, res) => {
     try {
-        console.log(req.body);
         
         const {  Nombre, Descripcion, Codigo, Tipo_Producto, Tipo_Unidad, Unidades_Maximas, Unidades_Minimas } = req.body;
         if (!Nombre || !Descripcion || !Codigo || !Tipo_Producto || !Tipo_Unidad || !Unidades_Maximas || !Unidades_Minimas) {
