@@ -14,6 +14,11 @@ Cada Router va a contener una parte de la api (el backend) y cada router va esta
 
 //Citas
 
+import historialRoutes from "./Citas/routes/historial.routes.js";
+import reprogramarRoutes from "./Citas/routes/reprogramar.routes.js";
+import citasRoutes from "./Citas/routes/citas.routes.js";
+
+
 //Compras
 
 //Consultas Medicas
@@ -53,8 +58,10 @@ import solicitudesLaboratorioRoutes from "./Laboratorio/routes/solicitudes_labor
 //Mantenimiento
 
 //Personal
-
-
+import empleadosRoutes from "./Personal/routes/empleados.routes.js";
+import especialidadesRoutes from "./Personal/routes/especialidades.routes.js";
+import rolesRoutes from "./Personal/routes/roles.routes.js";
+import pagosEmpleadosRoutes from "./Personal/routes/pagos_empleados.routes.js";
 
 /*
 
@@ -85,6 +92,10 @@ app.use(stc("public"));
 //Administracion
 
 //Citas
+
+app.use("/api/citas/historial", historialRoutes); // Rutas para el historial de citas
+app.use("/api/citas/reprogramar", reprogramarRoutes); // Rutas para reprogramar citas
+app.use("/api/citas", citasRoutes); // Rutas generales para citas
 
 //Compras
 
@@ -126,6 +137,10 @@ app.use("/api/laboratorio/pruebas", pruebasRoutes);
 
 //Personal
 
+app.use('/api/personal/empleados', empleadosRoutes);
+app.use("/api/personal/especialidades", especialidadesRoutes);
+app.use("/api/personal/roles", rolesRoutes);
+app.use("/api/personal/pagos_empleados", pagosEmpleadosRoutes);
 
 // Middleware para manejar rutas no encontradas
 app.use((req, res, next) => {
