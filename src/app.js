@@ -44,7 +44,7 @@ import repuestosRoutes from "./Inventario/routes/repuestos.routes.js"
 
 //Laboratorio
 
-import examenesRoutes from "./Laboratorio/routes/examenes.routes.js";
+import examenes_labRoutes from "./Laboratorio/routes/examenes.routes.js";
 import pruebasRoutes from "./Laboratorio/routes/pruebas.routes.js";
 import resultadosRoutes from "./Laboratorio/routes/resultados.routes.js";
 import pacienteRoutes from "./Laboratorio/routes/pacientes.routes.js";
@@ -119,7 +119,7 @@ app.use("/api/inventario/repuestos", repuestosRoutes);
 app.use("/api/laboratorio/solicitudesLaboratorio", solicitudesLaboratorioRoutes);
 app.use("/api/laboratorio/pacientes", pacienteRoutes);
 app.use("/api/laboratorio/resultados", resultadosRoutes);
-app.use("/api/laboratorio/examenes", examenesRoutes);
+app.use("/api/laboratorio/examenes", examenes_labRoutes);
 app.use("/api/laboratorio/pruebas", pruebasRoutes);
 
 //Mantenimiento
