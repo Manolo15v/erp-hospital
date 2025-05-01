@@ -1,3 +1,4 @@
+
 import express,  {static as stc, json} from "express";
 import morgan from "morgan";
 import cors from "cors"; 
@@ -13,6 +14,11 @@ Cada Router va a contener una parte de la api (el backend) y cada router va esta
 //Administracion
 
 //Citas
+
+import historialRoutes from "./Citas/routes/historial.routes.js";
+import reprogramarRoutes from "./Citas/routes/reprogramar.routes.js";
+import citasRoutes from "./Citas/routes/citas.routes.js";
+
 
 //Compras
 
@@ -79,6 +85,12 @@ app.use(stc("public"));
 //Administracion
 
 //Citas
+
+
+app.use("/api/citas/historial", historialRoutes); // Rutas para el historial de citas
+app.use("/api/citas/reprogramar", reprogramarRoutes); // Rutas para reprogramar citas
+app.use("/api/citas", citasRoutes); // Rutas generales para citas
+
 
 //Compras
 
