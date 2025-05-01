@@ -57,6 +57,10 @@ import solicitudesLaboratorioRoutes from "./Laboratorio/routes/solicitudes_labor
 
 //Mantenimiento
 
+import mantenimientoRoute from './Mantenimiento/routes/mantenimientoRoute.js';
+import reporteRoute from './Mantenimiento/routes/reporteRoute.js'
+import ordenesTrabajoRoute from './Mantenimiento/routes/ordenesRoute.js'
+
 //Personal
 import empleadosRoutes from "./Personal/routes/empleados.routes.js";
 import especialidadesRoutes from "./Personal/routes/especialidades.routes.js";
@@ -134,6 +138,10 @@ app.use("/api/laboratorio/examenes", examenes_labRoutes);
 app.use("/api/laboratorio/pruebas", pruebasRoutes);
 
 //Mantenimiento
+
+app.use('/api/mantenimiento/mantenimiento', mantenimientoRoute);
+app.use('/api/mantenimiento/ordenes', ordenesTrabajoRoute);
+app.use('/api/mantenimiento/reporte', reporteRoute);
 
 //Personal
 
