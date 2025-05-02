@@ -80,9 +80,9 @@ app.use(stc("public"));
 
 //Consultas Medicas
 
-app.use("/api/consultas-medicas/citas", citasMedicasRoutes);
-app.use("/api/consultas-medicas/departamentos", departamentosRoutes);
-app.use("/api/consultas-medicas/pacientes", pacienteRoutes);
+app.use("/api/consultas_medicas/citas", citasMedicasRoutes);
+app.use("/api/consultas_medicas/departamentos", departamentosRoutes);
+app.use("/api/consultas_medicas/pacientes", pacienteRoutes);
 
 //Consultas Odontologicas
 
