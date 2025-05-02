@@ -97,6 +97,7 @@ import empleadosRoutes from "./Personal/routes/empleados.routes.js";
 import especialidadesRoutes from "./Personal/routes/especialidades.routes.js";
 import rolesRoutes from "./Personal/routes/roles.routes.js";
 import pagosEmpleadosRoutes from "./Personal/routes/pagos_empleados.routes.js";
+import usuariosRoutes from "./Usuarios/routes/usuarios.routes.js";
 
 /*
 
@@ -210,6 +211,9 @@ app.use('/api/personal/empleados', empleadosRoutes);
 app.use("/api/personal/especialidades", especialidadesRoutes);
 app.use("/api/personal/roles", rolesRoutes);
 app.use("/api/personal/pagos_empleados", pagosEmpleadosRoutes);
+
+//Usuarios
+app.use("/api/usuarios", usuariosRoutes);
 
 // Middleware para manejar rutas no encontradas
 app.use((req, res, next) => {
