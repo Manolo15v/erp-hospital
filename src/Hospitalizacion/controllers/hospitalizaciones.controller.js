@@ -2,7 +2,7 @@ import { pool } from "../../db.js";
 
 export const getAllHospitalizaciones = async (req, res) => {
     try {
-    const [data] = await pool.query(`SELECT * FROM hospitalizaciones`);
+    const [data] = await pool.query(`SELECT * FROM hospitalizaciones ORDER BY ISNULL(fecha_egreso) DESC, fecha_ingreso ASC, fecha_egreso DESC;`);
     if (!data || data.length == 0) {
       return res.status(404).json({ error: 'No encontrado' });
     }
