@@ -37,4 +37,4 @@ router.put('/api/consultas/historia/:id', upload.single('archivo'), updateHistor
 
 router.delete('/api/consultas/:id', deleteConsulta);
 
-export {router};
+export default router;

@@ -9,4 +9,4 @@ const router = express.Router();
 router.get('/api/consultas/insumos/consultorio', getInsumosConsultorio);
 router.post('/api/consultas/insumos/actualizar', updateInventarioConsultorio);
 
-export {router};
+export default router;

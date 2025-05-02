@@ -8,4 +8,4 @@ router.get("/", getAllPacientes);
 router.get("/:id", getPacienteById);
 router.post("/", createPaciente);
 
-export {router};
+export default router;

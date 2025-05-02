@@ -10,4 +10,4 @@ router.put("/:id",updateCita);
 router.delete("/:id",deleteCita);
 router.post("/", createCita);
 
-export {router};
+export default router;

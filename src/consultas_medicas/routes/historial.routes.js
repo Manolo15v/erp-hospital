@@ -16,4 +16,4 @@ router.post('/api/historiales', upload.single('archivo'), createHistoria);
 router.put('/api/historiales/:id', upload.single('archivo'), updateHistoria);
 router.delete('/api/historiales/:id', deleteHistoria);
 
-export {router};
+export default router;
