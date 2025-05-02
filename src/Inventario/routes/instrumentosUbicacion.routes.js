@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createUbicacion, deleteUbicacionById, getAllUbicaciones, getUbicacionesByInstrumentoId, getUbicacionesByUbicacionId, updateUbicacionById } from "../controllers/InstrumentosUbicacion.controller.js";
+import { createUbicacion, deleteUbicacionById, getAllUbicaciones, getUbicacionesByInstrumentoId, getUbicacionesByUbicacionId, updateUbicacionById } from "../controllers/instrumentosUbicacion.controller.js";
 
 const router = Router();
 router.get("/", getAllUbicaciones);

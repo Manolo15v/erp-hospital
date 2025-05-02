@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createModelo, deleteById, getAll, getById, updateById } from "../controllers/Modelos_Equipos.controller.js";
+import { createModelo, deleteById, getAll, getById, updateById } from "../controllers/modelos_equipos.controller.js";
 
 const router = Router();
 
