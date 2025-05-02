@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS `citas` (
   `nombre` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `apellido` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `fecha_cita` datetime DEFAULT NULL,
+  `nueva_fecha` datetime DEFAULT NULL,
   `estado` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `tipo_cita_id` int DEFAULT NULL,
   `observaciones` text COLLATE utf8mb4_general_ci,
@@ -203,7 +204,7 @@ CREATE TABLE IF NOT EXISTS `egresos` (
 );
 
 CREATE TABLE IF NOT EXISTS `ordenescompra` (
-    `id_orden_compra` INT PRIMARY KEY,
+    `id_orden_compra` INT PRIMARY KEY AUTO_INCREMENT,
     `fecha_orden` DATE NOT NULL,
     `proveedor` VARCHAR(100) NOT NULL,
     `monto_total` DECIMAL(15, 2) NOT NULL,
@@ -565,20 +566,43 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   KEY `usuarios_ibfk_1` (`empleado_id`),
   CONSTRAINT `usuarios_ibfk_1` FOREIGN KEY (`empleado_id`) REFERENCES `empleados` (`empleado_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-CREATE TABLE citas_medicas_solicitudes (
-  consulta_id   INTEGER NOT NULL,
+CREATE TABLE IF NOT EXISTS citas_medicas_solicitudes (
+  consulta_id  INTEGER NOT NULL,
   cita_id  INTEGER NOT NULL,
   PRIMARY KEY (consulta_id, cita_id),
   FOREIGN KEY (consulta_id)  REFERENCES consultas_medicas   (consulta_id),
   FOREIGN KEY (cita_id) REFERENCES citas (cita_id)
 );
-CREATE TABLE citas_consultas_odontologicas (
+CREATE TABLE IF NOT EXISTS citas_consultas_odontologicas (
   consulta_id   INTEGER NOT NULL,
   cita_id  INTEGER NOT NULL,
   PRIMARY KEY (consulta_id, cita_id),
   FOREIGN KEY (consulta_id)  REFERENCES consultas_odontologicas (consulta_id),
   FOREIGN KEY (cita_id) REFERENCES citas  (cita_id)
 );
+
+CREATE TABLE IF NOT EXISTS examenes_laboratorio (
+  examen_id int NOT NULL AUTO_INCREMENT,
+  paciente_id int NOT NULL,
+  fecha datetime DEFAULT NULL,
+  tipo_examen varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  estado varchar(50) COLLATE utf8mb4_general_ci DEFAULT 'Pendiente',
+  resultados text COLLATE utf8mb4_general_ci,
+  observaciones text COLLATE utf8mb4_general_ci,
+  PRIMARY KEY (examen_id),
+  KEY fk_paciente_id (paciente_id),
+  CONSTRAINT fk_paciente_id FOREIGN KEY (paciente_id) REFERENCES pacientes (paciente_id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE IF NOT EXISTS pruebas_laboratorio (
+  prueba_id int NOT NULL AUTO_INCREMENT,
+  nombre varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  categoria varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  fecha datetime DEFAULT NULL,
+  descripcion text COLLATE utf8mb4_general_ci,
+  PRIMARY KEY (prueba_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 CREATE TABLE IF NOT EXISTS consumos_consultas_medicas (
   consulta_id   INT        NOT NULL,
   Id_Producto   INT        NOT NULL,
@@ -595,7 +619,7 @@ CREATE TABLE IF NOT EXISTS consumos_consultas_medicas (
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci;
 
-CREATE TABLE consumos_consultas_odontologicas (
+CREATE TABLE IF NOT EXISTS consumos_consultas_odontologicas (
   consulta_id   INT        NOT NULL,
   Id_Producto   INT        NOT NULL,
   consumidos    INT        NULL,
