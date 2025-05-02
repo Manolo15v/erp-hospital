@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { create, deleteById, getAll, getByArea, getById, updateById } from "../controllers/almacen.controller.js";
 
-const router = Router();
+const  router = Router();
 
 router.get("/", getAll);
 router.get("/:id", getById)
