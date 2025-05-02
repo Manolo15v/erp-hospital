@@ -8,4 +8,3 @@ router.get("/nombre/:nombre",getByNombre);
 
 export default router;
 
-

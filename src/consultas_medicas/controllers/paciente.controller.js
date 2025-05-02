@@ -48,4 +48,3 @@ export const createPaciente = async (req, res) => { // Crear pacientes, para los
     }
 };
 
-

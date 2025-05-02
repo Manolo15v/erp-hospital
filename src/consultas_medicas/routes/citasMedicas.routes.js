@@ -11,5 +11,3 @@ router.delete("/:id",deleteCita);
 router.post("/", createCita);
 
 export default router;
-
-
