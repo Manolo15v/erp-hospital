@@ -1,6 +1,6 @@
 import {Router} from 'express';
 
-import {getAll, getById, updateCita, deleteCita}  from "../controllers/citasmedicas.controller.js";
+import {getAll, getById, updateCita, deleteCita, createCita}  from "../controllers/citasmedicas.controller.js";
 
 const router= Router();
 

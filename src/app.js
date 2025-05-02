@@ -12,18 +12,15 @@ Cada Router va a contener una parte de la api (el backend) y cada router va esta
 
 //Administracion
 
-
 import ordenCompraRoutes from "./Administracion/routes/ordenCompra.routes.js";
 import productoRoutes from "./Administracion/routes/producto.routes.js";
 import recursosAdministracionRoutes from "./Administracion/routes/recursos.routes.js";
-
 
 //Citas
 
 import historialRoutes from "./Citas/routes/historial.routes.js";
 import reprogramarRoutes from "./Citas/routes/reprogramar.routes.js";
 import citasRoutes from "./Citas/routes/citas.routes.js";
-
 
 //Compras
 
@@ -41,7 +38,7 @@ import utilsRoutes from "./Compras/routes/utils.routes.js"
 
 import citasMedicasRoutes from "./consultas_medicas/routes/citasMedicas.routes.js";
 import departamentosRoutes from "./consultas_medicas/routes/departamentos.routes.js";
-import pacienteRoutes from "./consultas_medicas/routes/paciente.routes.js";
+import pacienteMedRoutes from "./consultas_medicas/routes/paciente.routes.js";
 
 //Consultas Odontologicas
 
@@ -124,7 +121,6 @@ app.use(stc("public"));
 
 //Administracion
 
-
 app.use("/api/administracion/ordenes", ordenCompraRoutes); // Rutas para las ordenes de compra
 app.use("/api/administracion/productos", productoRoutes); // Rutas para los productos
 app.use("/api/administracion/recursos", recursosAdministracionRoutes); // Rutas para los recursos
@@ -151,7 +147,7 @@ app.use("/api/compras/utiles",utilsRoutes)
 
 app.use("/api/consultas_medicas/citas", citasMedicasRoutes);
 app.use("/api/consultas_medicas/departamentos", departamentosRoutes);
-app.use("/api/consultas_medicas/pacientes", pacienteRoutes);
+app.use("/api/consultas_medicas/pacientes", pacienteMedRoutes);
 
 //Consultas Odontologicas
 
