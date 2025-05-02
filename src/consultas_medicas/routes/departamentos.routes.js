@@ -6,6 +6,5 @@ const router= Router();
 router.get("/:id",getById);
 router.get("/nombre/:nombre",getByNombre);
 
-export default router;
-
+export {router};
 
