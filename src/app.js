@@ -18,6 +18,10 @@ Cada Router va a contener una parte de la api (el backend) y cada router va esta
 
 //Consultas Medicas
 
+import citasMedicasRoutes from "./consultas_medicas/routes/citasMedicas.routes.js";
+import departamentosRoutes from "./consultas_medicas/routes/departamentos.routes.js";
+import pacienteRoutes from "./consultas_medicas/routes/paciente.routes.js";
+
 //Consultas Odontologicas
 
 //Hospitalizacion
@@ -75,6 +79,10 @@ app.use(stc("public"));
 //Compras
 
 //Consultas Medicas
+
+app.use("/api/consultas-medicas/citas", citasMedicasRoutes);
+app.use("/api/consultas-medicas/departamentos", departamentosRoutes);
+app.use("/api/consultas-medicas/pacientes", pacienteRoutes);
 
 //Consultas Odontologicas
 
