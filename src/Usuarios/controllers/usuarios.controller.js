@@ -1,5 +1,4 @@
 import { pool } from "../../db.js";
-import { encriptarContraseña, compararContraseña } from "../../utils/encriptacionContraseñas.js";
 
 export const getAll = async (req, res) => {
     try {
@@ -48,7 +47,7 @@ export const getById = async (req, res) => {
             LEFT JOIN 
                 sistema_gestion_hospitalaria.empleados e 
                 ON u.empleado_id = e.empleado_id
-            WHERE usuario_id = ?;`,
+            WHERE u.usuario_id = ?;`,
             [id]
         );
 
@@ -81,13 +80,13 @@ export const signIn = async (req, res) => {
             return res.status(400).json({ error: "Todos los campos son requerido"});
         }
 
-        const claveHash = encriptarContraseña(clave);
+        // const claveHash = encriptarContraseña(clave);
 
         const [result] = await pool.query(
             `INSERT INTO usuarios 
             (usuario, clave, empleado_id, modulos) 
             VALUES (?, ?, ?, ?)`,
-            [usuario, claveHash, empleado_id, modulos]
+            [usuario, clave, empleado_id, modulos]
         );
 
         return res.status(201).json({
@@ -108,11 +107,23 @@ export const logIn = async (req, res) => {
         const {  usuario, clave } = req.body;
 
         if (!usuario || !clave) {  
-            return res.status(400).json({ error: "Todos los campos son requerido"});
+            return res.status(400).json({ error: "Todos los campos son requeridos"});
         }
 
         const [result] = await pool.query(
-            `SELECT clave FROM usuarios WHERE usuario = ?`,
+            `SELECT 
+                u.*, 
+                e.nombre,
+                e.apellido,
+                e.cedula,
+                e.email,
+                e.estado
+            FROM 
+                sistema_gestion_hospitalaria.usuarios u
+            LEFT JOIN 
+                sistema_gestion_hospitalaria.empleados e 
+                ON u.empleado_id = e.empleado_id
+            WHERE u.usuario = ?`,
             [usuario]
         );
 
@@ -122,14 +133,11 @@ export const logIn = async (req, res) => {
             });
         }
 
-
-        // ToDo Terminar la logica de login
-        // compararContraseña(clave, result[0].clave)
-
-
+        if (clave  !== result[0].clave) {
+            return res.status(401).json({ error: "Contraseña incorrecta"});
+        }
 
         return res.status(200).json({
-            success: true,
             data: result[0]
         });
 
