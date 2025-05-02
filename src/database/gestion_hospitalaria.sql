@@ -203,7 +203,7 @@ CREATE TABLE IF NOT EXISTS `egresos` (
 );
 
 CREATE TABLE IF NOT EXISTS `ordenescompra` (
-    `id_orden_compra` INT PRIMARY KEY,
+    `id_orden_compra` INT PRIMARY KEY AUTO_INCREMENT,
     `fecha_orden` DATE NOT NULL,
     `proveedor` VARCHAR(100) NOT NULL,
     `monto_total` DECIMAL(15, 2) NOT NULL,
