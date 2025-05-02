@@ -1,17 +1,29 @@
 import express from 'express';
-import { getAllExamenes, getExamenById, createExamen, updateExamen, deleteExamen, getExamenesByCategoria, getExamenesByPrecio, getExamenesDisponibles } from '../controllers/examenes_lab.controller.js';
+import {
+    getAllExamenes,
+    getExamenById,
+    createExamen,
+    updateExamen,
+    deleteExamen,
+    getExamenesByTipo,
+    getExamenesByFecha,
+    getExamenesByEstado,
+    getExamenesPendientes
+} from '../controllers/examenes_lab.controller.js';
+
 const router = express.Router();
 
-// Rutas para Gestión de Exámenes
-router.get('/', getAllExamenes); // Obtener todos los exámenes disponibles
-router.get('/:id', getExamenById); // Obtener examen por ID
-router.post('/', createExamen); // Crear nuevo examen
-router.put('/:id', updateExamen); // Actualizar información del examen
-router.delete('/:id', deleteExamen); // Eliminar examen
+//Rutas generales para la gestión de exámenes
+router.get('/', getAllExamenes);
+router.get('/:id', getExamenById);
+router.post('/', createExamen);
+router.put('/:id', updateExamen);
+router.delete('/:id', deleteExamen);
 
-// Rutas de gestión de exámenes
-router.get('/categoria/:categoria', getExamenesByCategoria); // Obtener exámenes por categoría
-router.get('/precio', getExamenesByPrecio); // Obtener exámenes por rango de precio
-router.get('/disponibles', getExamenesDisponibles); // Obtener exámenes disponibles
+//Rutas específicas para el filtrado de historial de exámenes
+router.get('/tipo/:tipo_examen', getExamenesByTipo);
+router.get('/fecha', getExamenesByFecha);
+router.get('/estado/:estado', getExamenesByEstado);
+router.get('/pendientes', getExamenesPendientes);
 
 export default router;

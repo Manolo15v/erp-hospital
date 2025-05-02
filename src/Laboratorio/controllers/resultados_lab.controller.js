@@ -1,188 +1,180 @@
 import { pool } from "../../db.js";
 
-// Get all resultados
+// Get all examenes with patient details
 export const getAllResultados = async (req, res) => {
     try {
-        const [rows] = await pool.query(
-            'SELECT rl.resultado_id, rl.solicitud_id, rl.parametro, rl.valor, \
-                    rl.rango_referencial, rl.unidad, rl.fecha_registro, \
-                    sl.paciente_id, sl.estado, sl.fecha_resultados \
-             FROM resultados_laboratorio rl \
-             INNER JOIN solicitudes_laboratorio sl ON rl.solicitud_id = sl.solicitud_id \
-             ORDER BY rl.fecha_registro DESC'
+        // Get all examenes with their types
+        const [examenes] = await pool.query(
+            `SELECT DISTINCT e.examen_id, e.paciente_id, p.nombre, p.apellido, p.cedula, e.fecha as fecha_examen, 
+                    e.tipo_examen, e.estado, e.resultados, e.observaciones 
+             FROM examenes_laboratorio e 
+             JOIN pacientes p ON e.paciente_id = p.paciente_id 
+             ORDER BY e.fecha DESC`
         );
-        res.json(rows);
+
+        // Get all pruebas with their categories
+        const [pruebas] = await pool.query(
+            `SELECT pl.prueba_id, pl.nombre as tipo_examen, pl.categoria 
+             FROM pruebas_laboratorio pl 
+             ORDER BY pl.nombre`
+        );
+
+        // Map examenes with their types
+        const examenesConTipos = examenes.map(examen => {
+            const prueba = pruebas.find(p => p.tipo_examen === examen.tipo_examen);
+            return {
+                ...examen,
+                categoria: prueba ? prueba.categoria : 'No especificada'
+            };
+        });
+
+        res.json(examenesConTipos);
     } catch (error) {
-        console.error('Error al obtener resultados:', error);
-        res.status(500).json({ error: 'Error al obtener resultados' });
+        console.error('Error al obtener examenes:', error);
+        res.status(500).json({ error: 'Error al obtener examenes' });
     }
 };
 
-// Get resultados by solicitud
-export const getResultadosBySolicitud = async (req, res) => {
-    try {
-        const { solicitud_id } = req.params;
-        const [rows] = await pool.query(
-            'SELECT rl.parametro, rl.valor, rl.rango_referencial, rl.unidad, \
-                    rl.fecha_registro, rl.observacion \
-             FROM resultados_laboratorio rl \
-             WHERE rl.solicitud_id = ? \
-             ORDER BY rl.fecha_registro DESC',
-            [solicitud_id]
-        );
-
-        res.json(rows);
-    } catch (error) {
-        console.error('Error al obtener resultados por solicitud:', error);
-        res.status(500).json({ error: 'Error al obtener resultados por solicitud' });
-    }
-};
-
-// Get resultados by paciente
+// Get examenes by paciente
 export const getResultadosByPaciente = async (req, res) => {
     try {
-        const { paciente_id } = req.params;
+        const { nombre, apellido, cedula } = req.params;
         const [rows] = await pool.query(
-            'SELECT rl.parametro, rl.valor, rl.rango_referencial, rl.unidad, \
-                    rl.fecha_registro, rl.observacion, \
-                    sl.fecha_resultados, sl.estado \
-             FROM resultados_laboratorio rl \
-             INNER JOIN solicitudes_laboratorio sl ON rl.solicitud_id = sl.solicitud_id \
-             WHERE sl.paciente_id = ? \
-             ORDER BY rl.fecha_registro DESC',
-            [paciente_id]
+            `SELECT DISTINCT e.examen_id, e.paciente_id, p.nombre, p.apellido, p.cedula, e.fecha as fecha_examen, 
+                    e.tipo_examen, e.estado, e.resultados, e.observaciones 
+             FROM examenes_laboratorio e 
+             JOIN pacientes p ON e.paciente_id = p.paciente_id 
+             WHERE p.nombre = ? AND p.apellido = ? AND p.cedula = ? 
+             ORDER BY e.fecha DESC`,
+            [nombre, apellido, cedula]
         );
 
         res.json(rows);
     } catch (error) {
-        console.error('Error al obtener resultados por paciente:', error);
-        res.status(500).json({ error: 'Error al obtener resultados por paciente' });
+        console.error('Error al obtener examenes por paciente:', error);
+        res.status(500).json({ error: 'Error al obtener examenes por paciente' });
     }
 };
 
-// Create new resultado
-export const createResultado = async (req, res) => {
-    try {
-        const { solicitud_id, parametro, valor, rango_referencial, unidad, observacion } = req.body;
-
-        const [result] = await pool.query(
-            'INSERT INTO resultados_laboratorio (solicitud_id, parametro, valor, \
-                    rango_referencial, unidad, observacion) \
-             VALUES (?, ?, ?, ?, ?, ?)',
-            [solicitud_id, parametro, valor, rango_referencial, unidad, observacion]
-        );
-
-        // Update solicitud status to completed
-        await pool.query(
-            'UPDATE solicitudes_laboratorio \
-             SET estado = "completado", fecha_resultados = NOW() \
-             WHERE solicitud_id = ?',
-            [solicitud_id]
-        );
-
-        res.status(201).json({
-            message: 'Resultado creado exitosamente',
-            resultado_id: result.insertId
-        });
-    } catch (error) {
-        console.error('Error al crear resultado:', error);
-        res.status(500).json({ error: 'Error al crear resultado' });
-    }
-};
-
-// Update resultado
-export const updateResultado = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { parametro, valor, rango_referencial, unidad, observacion } = req.body;
-
-        const [result] = await pool.query(
-            'UPDATE resultados_laboratorio \
-             SET parametro = ?, valor = ?, rango_referencial = ?, \
-                 unidad = ?, observacion = ? \
-             WHERE resultado_id = ?',
-            [parametro, valor, rango_referencial, unidad, observacion, id]
-        );
-
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ error: 'Resultado no encontrado' });
-        }
-
-        res.json({ message: 'Resultado actualizado exitosamente' });
-    } catch (error) {
-        console.error('Error al actualizar resultado:', error);
-        res.status(500).json({ error: 'Error al actualizar resultado' });
-    }
-};
-
-// Delete resultado
-export const deleteResultado = async (req, res) => {
-    try {
-        const { id } = req.params;
-
-        // First check if the result exists
-        const [rows] = await pool.query(
-            'SELECT resultado_id FROM resultados_laboratorio WHERE resultado_id = ?',
-            [id]
-        );
-
-        if (rows.length === 0) {
-            return res.status(404).json({ error: 'Resultado no encontrado' });
-        }
-
-        // Delete the result
-        const [result] = await pool.query(
-            'DELETE FROM resultados_laboratorio WHERE resultado_id = ?',
-            [id]
-        );
-
-        res.json({ message: 'Resultado eliminado exitosamente' });
-    } catch (error) {
-        console.error('Error al eliminar resultado:', error);
-        res.status(500).json({ error: 'Error al eliminar resultado' });
-    }
-};
-
-// Get resultados by date range
+// Get examenes by date range
 export const getResultadosByFecha = async (req, res) => {
     try {
         const { start, end } = req.query;
         const [rows] = await pool.query(
-            'SELECT rl.parametro, rl.valor, rl.rango_referencial, rl.unidad, \
-                    rl.fecha_registro, rl.observacion, \
-                    sl.paciente_id, sl.fecha_resultados \
-             FROM resultados_laboratorio rl \
-             INNER JOIN solicitudes_laboratorio sl ON rl.solicitud_id = sl.solicitud_id \
-             WHERE rl.fecha_registro BETWEEN ? AND ? \
-             ORDER BY rl.fecha_registro DESC',
+            `SELECT DISTINCT e.examen_id, p.nombre, p.apellido, p.cedula, e.fecha as fecha_examen, 
+                    e.tipo_examen, e.estado, e.resultados, e.observaciones 
+             FROM examenes_laboratorio e 
+             JOIN pacientes p ON e.paciente_id = p.paciente_id 
+             WHERE e.fecha BETWEEN ? AND ? 
+             ORDER BY e.fecha DESC`,
             [start, end]
         );
 
         res.json(rows);
     } catch (error) {
-        console.error('Error al obtener resultados por fecha:', error);
-        res.status(500).json({ error: 'Error al obtener resultados por fecha' });
+        console.error('Error al obtener examenes por fecha:', error);
+        res.status(500).json({ error: 'Error al obtener examenes por fecha' });
     }
 };
 
-// Get resultados by parameter
-export const getResultadosByParametro = async (req, res) => {
+// Get examenes by estado
+export const getResultadosByEstado = async (req, res) => {
     try {
-        const { parametro } = req.params;
+        const { estado } = req.params;
         const [rows] = await pool.query(
-            'SELECT rl.valor, rl.rango_referencial, rl.unidad, \
-                    rl.fecha_registro, rl.observacion, \
-                    sl.paciente_id, sl.fecha_resultados \
-             FROM resultados_laboratorio rl \
-             INNER JOIN solicitudes_laboratorio sl ON rl.solicitud_id = sl.solicitud_id \
-             WHERE rl.parametro = ? \
-             ORDER BY rl.fecha_registro DESC',
-            [parametro]
+            `SELECT DISTINCT e.examen_id, p.nombre, p.apellido, p.cedula, e.fecha as fecha_examen, 
+                    e.tipo_examen, e.estado, e.resultados, e.observaciones 
+             FROM examenes_laboratorio e 
+             JOIN pacientes p ON e.paciente_id = p.paciente_id 
+             WHERE e.estado = ? 
+             ORDER BY e.fecha DESC`,
+            [estado]
         );
 
         res.json(rows);
     } catch (error) {
-        console.error('Error al obtener resultados por parámetro:', error);
-        res.status(500).json({ error: 'Error al obtener resultados por parámetro' });
+        console.error('Error al obtener examenes por estado:', error);
+        res.status(500).json({ error: 'Error al obtener examenes por estado' });
+    }
+};
+
+// Get examenes by tipo de examen
+export const getResultadosByTipo = async (req, res) => {
+    try {
+        const { tipo_examen } = req.params;
+        const [examenes] = await pool.query(
+            `SELECT DISTINCT e.examen_id, p.nombre, p.apellido, p.cedula, e.fecha as fecha_examen, 
+                    e.tipo_examen, e.estado, e.resultados, e.observaciones 
+             FROM examenes_laboratorio e 
+             JOIN pacientes p ON e.paciente_id = p.paciente_id 
+             WHERE e.tipo_examen = ? 
+             ORDER BY e.fecha DESC`,
+            [tipo_examen]
+        );
+
+        res.json(rows);
+    } catch (error) {
+        console.error('Error al obtener examenes por tipo de examen:', error);
+        res.status(500).json({ error: 'Error al obtener examenes por tipo de examen' });
+    }
+};
+
+// Get examenes by multiple filters
+export const getResultadosByFilters = async (req, res) => {
+    try {
+        const { nombre, apellido, cedula, start, end, estado, tipo_examen } = req.query;
+        let query = 'SELECT DISTINCT e.examen_id, p.nombre, p.apellido, p.cedula, e.fecha as fecha_examen, \
+                    e.tipo_examen, e.estado, e.resultados, e.observaciones \
+             FROM examenes_laboratorio e \
+             JOIN pacientes p ON e.paciente_id = p.paciente_id \
+             WHERE 1=1';
+
+        const params = [];
+
+        if (nombre && apellido) {
+            query += ' AND p.nombre = ? AND p.apellido = ?';
+            params.push(nombre, apellido);
+        }
+        if (cedula) {
+            query += ' AND p.cedula = ?';
+            params.push(cedula);
+        }
+        if (start && end) {
+            query += ' AND e.fecha BETWEEN ? AND ?';
+            params.push(start, end);
+        }
+        if (estado) {
+            query += ' AND e.estado = ?';
+            params.push(estado);
+        }
+        if (tipo_examen) {
+            query += ' AND e.tipo_examen = ?';
+            params.push(tipo_examen);
+        }
+
+        query += ' ORDER BY e.fecha DESC';
+
+        const [examenes] = await pool.query(query, params);
+
+        // Get all pruebas
+        const [pruebas] = await pool.query(
+            'SELECT pl.prueba_id, pl.nombre as tipo_examen, pl.categoria \
+             FROM pruebas_laboratorio pl \
+             ORDER BY pl.nombre'
+        );
+
+        // Map examenes with their types
+        const examenesConTipos = examenes.map(examen => {
+            const prueba = pruebas.find(p => p.tipo_examen === examen.tipo_examen);
+            return {
+                ...examen,
+                categoria: prueba ? prueba.categoria : 'No especificada'
+            };
+        });
+
+        res.json(examenesConTipos);
+    } catch (error) {
+        console.error('Error al obtener examenes por filtros:', error);
+        res.status(500).json({ error: 'Error al obtener examenes por filtros' });
     }
 };

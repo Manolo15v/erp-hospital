@@ -115,6 +115,28 @@ CREATE TABLE IF NOT EXISTS `equipos` (
   CONSTRAINT `equipos_ibfk_2` FOREIGN KEY (`Id_Ubicacion`) REFERENCES `almacenes_ubicaciones` (`Id_Ubicacion`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+CREATE TABLE IF NOT EXISTS `examenes_laboratorio` (
+  `examen_id` int NOT NULL AUTO_INCREMENT,
+  `paciente_id` int NOT NULL,
+  `fecha` datetime DEFAULT NULL,
+  `tipo_examen` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `estado` varchar(50) COLLATE utf8mb4_general_ci DEFAULT 'Pendiente',
+  `resultados` text COLLATE utf8mb4_general_ci,
+  `observaciones` text COLLATE utf8mb4_general_ci,
+  PRIMARY KEY (`examen_id`),
+  KEY `fk_paciente_id` (`paciente_id`),
+  CONSTRAINT `fk_paciente_id` FOREIGN KEY (`paciente_id`) REFERENCES `pacientes` (`paciente_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE IF NOT EXISTS `pruebas_laboratorio` (
+  `prueba_id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `categoria` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `fecha` datetime DEFAULT NULL,
+  `descripcion` text COLLATE utf8mb4_general_ci,
+  PRIMARY KEY (`prueba_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 CREATE TABLE IF NOT EXISTS `examenes_hospitalizacion` (
   `hospitalizacion_id` int DEFAULT NULL,
   `nombre` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,

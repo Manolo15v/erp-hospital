@@ -4,9 +4,10 @@ import { pool } from "../../db.js";
 export const getAllExamenes = async (req, res) => {
     try {
         const [rows] = await pool.query(
-            'SELECT tp.tipo_id, tp.nombre, tp.descripcion, tp.costo, \
-                    tp.duracion, tp.prioridad, tp.categoria \
-             FROM tipo_prueba tp'
+            'SELECT e.examen_id, p.nombre, p.apellido, e.fecha, e.tipo_examen, e.estado, e.resultados, e.observaciones \
+             FROM examenes_laboratorio e \
+             JOIN pacientes p ON e.paciente_id = p.paciente_id \
+             ORDER BY e.fecha DESC'
         );
         res.json(rows);
     } catch (error) {
@@ -20,10 +21,10 @@ export const getExamenById = async (req, res) => {
     try {
         const { id } = req.params;
         const [rows] = await pool.query(
-            'SELECT tp.tipo_id, tp.nombre, tp.descripcion, tp.costo, \
-                    tp.duracion, tp.prioridad, tp.categoria \
-             FROM tipo_prueba tp \
-             WHERE tp.tipo_id = ?',
+            'SELECT e.examen_id, e.paciente_id, p.nombre, p.apellido, e.fecha, e.tipo_examen, e.estado, e.resultados, e.observaciones \
+             FROM examenes_laboratorio e \
+             JOIN pacientes p ON e.paciente_id = p.paciente_id \
+             WHERE e.examen_id = ? ',
             [id]
         );
 
@@ -41,17 +42,17 @@ export const getExamenById = async (req, res) => {
 // Create new examen
 export const createExamen = async (req, res) => {
     try {
-        const { nombre, descripcion, costo, duracion, prioridad, categoria } = req.body;
+        const { paciente_id, fecha, tipo_examen, estado, resultados, observaciones } = req.body;
 
         const [result] = await pool.query(
-            'INSERT INTO tipo_prueba (nombre, descripcion, costo, duracion, prioridad, categoria) \
-             VALUES (?, ?, ?, ?, ?, ?)',
-            [nombre, descripcion, costo, duracion, prioridad, categoria]
+            'INSERT INTO examenes_laboratorio (paciente_id, fecha, tipo_examen, estado, resultados, observaciones) \
+             VALUES(?, ?, ?, ?, ?, ?)',
+            [paciente_id, fecha, tipo_examen, estado, resultados, observaciones]
         );
 
         res.status(201).json({
             message: 'Examen creado exitosamente',
-            tipo_id: result.insertId
+            examen_id: result.insertId
         });
     } catch (error) {
         console.error('Error al crear examen:', error);
@@ -63,14 +64,14 @@ export const createExamen = async (req, res) => {
 export const updateExamen = async (req, res) => {
     try {
         const { id } = req.params;
-        const { nombre, descripcion, costo, duracion, prioridad, categoria } = req.body;
+        const { paciente_id, fecha, tipo_examen, estado, resultados, observaciones } = req.body;
 
         const [result] = await pool.query(
-            'UPDATE tipo_prueba \
-             SET nombre = ?, descripcion = ?, costo = ?, duracion = ?, \
-                 prioridad = ?, categoria = ? \
-             WHERE tipo_id = ?',
-            [nombre, descripcion, costo, duracion, prioridad, categoria, id]
+            'UPDATE examenes_laboratorio \
+             SET paciente_id = ?, fecha = ?, tipo_examen = ?,\
+            estado = ?, resultados = ?, observaciones = ? \
+                WHERE examen_id = ? ',
+            [paciente_id, fecha, tipo_examen, estado, resultados, observaciones, id]
         );
 
         if (result.affectedRows === 0) {
@@ -91,7 +92,7 @@ export const deleteExamen = async (req, res) => {
 
         // First check if the exam exists
         const [rows] = await pool.query(
-            'SELECT tipo_id FROM tipo_prueba WHERE tipo_id = ?',
+            'SELECT examen_id FROM examenes_laboratorio WHERE examen_id = ?',
             [id]
         );
 
@@ -101,7 +102,7 @@ export const deleteExamen = async (req, res) => {
 
         // Delete the exam
         const [result] = await pool.query(
-            'DELETE FROM tipo_prueba WHERE tipo_id = ?',
+            'DELETE FROM examenes_laboratorio WHERE examen_id = ?',
             [id]
         );
 
@@ -110,71 +111,87 @@ export const deleteExamen = async (req, res) => {
         console.error('Error al eliminar examen:', error);
         if (error.code === 'ER_ROW_IS_REFERENCED_2') {
             return res.status(400).json({
-                error: 'No se puede eliminar el examen porque tiene solicitudes asociadas'
+                error: 'No se puede eliminar el examen porque tiene relaciones con otras tablas'
             });
         }
         res.status(500).json({ error: 'Error al eliminar examen' });
     }
 };
 
-// Get examenes by category
-export const getExamenesByCategoria = async (req, res) => {
+// Get examenes by type
+export const getExamenesByTipo = async (req, res) => {
     try {
-        const { categoria } = req.params;
+        const { tipo_examen } = req.params;
         const [rows] = await pool.query(
-            'SELECT tp.tipo_id, tp.nombre, tp.descripcion, tp.costo, \
-                    tp.duracion, tp.prioridad \
-             FROM tipo_prueba tp \
-             WHERE tp.categoria = ? \
-             ORDER BY tp.nombre',
-            [categoria]
+            'SELECT e.examen_id, p.nombre, p.apellido, e.fecha, e.tipo_examen, e.estado, e.resultados, e.observaciones \
+             FROM examenes_laboratorio e \
+             JOIN pacientes p ON e.paciente_id = p.paciente_id \
+             WHERE e.tipo_examen = ? \
+            ORDER BY e.fecha DESC',
+            [tipo_examen]
         );
 
         res.json(rows);
     } catch (error) {
-        console.error('Error al obtener exámenes por categoría:', error);
-        res.status(500).json({ error: 'Error al obtener exámenes por categoría' });
+        console.error('Error al obtener exámenes por tipo:', error);
+        res.status(500).json({ error: 'Error al obtener exámenes por tipo' });
     }
 };
 
-// Get examenes by price range
-export const getExamenesByPrecio = async (req, res) => {
+// Get examenes by date range
+export const getExamenesByFecha = async (req, res) => {
     try {
-        const { min, max } = req.query;
+        const { fecha_inicio, fecha_fin } = req.query;
         const [rows] = await pool.query(
-            'SELECT tp.tipo_id, tp.nombre, tp.descripcion, tp.costo, \
-                    tp.duracion, tp.prioridad \
-             FROM tipo_prueba tp \
-             WHERE tp.costo BETWEEN ? AND ? \
-             ORDER BY tp.costo',
-            [min, max]
+            'SELECT e.examen_id, p.nombre, p.apellido, e.fecha, e.tipo_examen, e.estado, e.resultados, e.observaciones \
+             FROM examenes_laboratorio e \
+             JOIN pacientes p ON e.paciente_id = p.paciente_id \
+             WHERE e.fecha BETWEEN ? AND ? \
+            ORDER BY e.fecha DESC',
+            [fecha_inicio, fecha_fin]
         );
 
         res.json(rows);
     } catch (error) {
-        console.error('Error al obtener exámenes por precio:', error);
-        res.status(500).json({ error: 'Error al obtener exámenes por precio' });
+        console.error('Error al obtener exámenes por fecha:', error);
+        res.status(500).json({ error: 'Error al obtener exámenes por fecha' });
     }
 };
 
-// Get available examenes
-export const getExamenesDisponibles = async (req, res) => {
+// Get examenes by status
+export const getExamenesByEstado = async (req, res) => {
     try {
-        // Get all examenes that don't have pending requests
+        const { estado } = req.params;
         const [rows] = await pool.query(
-            'SELECT tp.tipo_id, tp.nombre, tp.descripcion, tp.costo, \
-                    tp.duracion, tp.prioridad \
-             FROM tipo_prueba tp \
-             WHERE tp.tipo_id NOT IN \
-                 (SELECT DISTINCT sl.tipo_id \
-                  FROM solicitudes_laboratorio sl \
-                  WHERE sl.estado = "pendiente") \
-             ORDER BY tp.nombre'
+            'SELECT e.examen_id, p.nombre, p.apellido, e.fecha, e.tipo_examen, e.estado, e.resultados, e.observaciones \
+             FROM examenes_laboratorio e \
+             JOIN pacientes p ON e.paciente_id = p.paciente_id \
+             WHERE e.estado = ? \
+            ORDER BY e.fecha DESC',
+            [estado]
         );
 
         res.json(rows);
     } catch (error) {
-        console.error('Error al obtener exámenes disponibles:', error);
-        res.status(500).json({ error: 'Error al obtener exámenes disponibles' });
+        console.error('Error al obtener exámenes por estado:', error);
+        res.status(500).json({ error: 'Error al obtener exámenes por estado' });
+    }
+};
+
+// Get pending examenes
+export const getExamenesPendientes = async (req, res) => {
+    try {
+        const [rows] = await pool.query(
+            'SELECT e.examen_id, p.nombre, p.apellido, e.fecha, e.tipo_examen, e.estado, e.resultados, e.observaciones \
+             FROM examenes_laboratorio e \
+             JOIN pacientes p ON e.paciente_id = p.paciente_id \
+             WHERE e.estado = "Pendiente" \
+             ORDER BY e.fecha ASC'
+        );
+
+        res.json(rows);
+    } catch (error) {
+        console.error('Error al obtener exámenes pendientes:', error);
+        res.status(500).json({ error: 'Error al obtener exámenes pendientes' });
     }
 };
