@@ -37,8 +37,13 @@ import utilsRoutes from "./Compras/routes/utils.routes.js"
 //Consultas Medicas
 
 import citasMedicasRoutes from "./Consultas_Medicas/routes/citasMedicas.routes.js";
+import consultasMedRoutes from "./Consultas_Medicas/routes/consultas.routes.js";
 import departamentosRoutes from "./Consultas_Medicas/routes/departamentos.routes.js";
+import historialMedRoutes from "./Consultas_Medicas/routes/historial.routes.js";
+import insumosRoutes from "./Consultas_Medicas/routes/insumos.routes.js";
 import pacienteMedRoutes from "./Consultas_Medicas/routes/paciente.routes.js";
+
+
 
 //Consultas Odontologicas
 
@@ -148,6 +153,9 @@ app.use("/api/compras/utiles",utilsRoutes)
 app.use("/api/consultas_medicas/citas", citasMedicasRoutes);
 app.use("/api/consultas_medicas/departamentos", departamentosRoutes);
 app.use("/api/consultas_medicas/pacientes", pacienteMedRoutes);
+app.use("/api/consultas_medicas/consultas", consultasMedRoutes);
+app.use("/api/consultas_medicas/historiales", historialMedRoutes);
+app.use("/api/consultas_medicas/insumos", insumosRoutes);
 
 //Consultas Odontologicas
 
