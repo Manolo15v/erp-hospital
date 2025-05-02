@@ -1,10 +1,11 @@
 import { pool } from "../../db.js";
+
 // Get all pacientes
 export const getAllPacientes = async (req, res) => {
     try {
         const [rows] = await pool.query(
-            'SELECT p.paciente_id, p.nombre, p.apellido, p.identificacion, \
-                    p.fecha_nacimiento, p.genero, p.telefono \
+            'SELECT p.paciente_id, p.nombre, p.apellido, p.cedula, \
+                    p.fecha_nacimiento, p.genero, p.telefono, p.direccion, p.email \
              FROM pacientes p'
         );
         res.json(rows);
@@ -19,8 +20,8 @@ export const getPacienteById = async (req, res) => {
     try {
         const { id } = req.params;
         const [rows] = await pool.query(
-            'SELECT p.paciente_id, p.nombre, p.apellido, p.identificacion, \
-                    p.fecha_nacimiento, p.genero, p.telefono \
+            'SELECT p.paciente_id, p.nombre, p.apellido, p.cedula, \
+                    p.fecha_nacimiento, p.genero, p.telefono, p.direccion, p.email \
              FROM pacientes p \
              WHERE p.paciente_id = ?',
             [id]
@@ -40,12 +41,12 @@ export const getPacienteById = async (req, res) => {
 // Create new paciente
 export const createPaciente = async (req, res) => {
     try {
-        const { nombre, apellido, identificacion, genero, fecha_nacimiento, telefono } = req.body;
+        const { nombre, apellido, cedula, genero, fecha_nacimiento, telefono, direccion, email } = req.body;
 
         const [result] = await pool.query(
-            'INSERT INTO pacientes (nombre, apellido, identificacion, genero, fecha_nacimiento, telefono) \
-             VALUES (?, ?, ?, ?, ?, ?)',
-            [nombre, apellido, identificacion, genero, fecha_nacimiento, telefono]
+            'INSERT INTO pacientes (nombre, apellido, cedula, genero, fecha_nacimiento, telefono, direccion, email) \
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [nombre, apellido, cedula, genero, fecha_nacimiento, telefono, direccion, email]
         );
 
         res.status(201).json({
@@ -65,14 +66,14 @@ export const createPaciente = async (req, res) => {
 export const updatePaciente = async (req, res) => {
     try {
         const { id } = req.params;
-        const { nombre, apellido, identificacion, genero, fecha_nacimiento, telefono } = req.body;
+        const { nombre, apellido, cedula, genero, fecha_nacimiento, telefono, direccion, email } = req.body;
 
         const [result] = await pool.query(
             'UPDATE pacientes \
-             SET nombre = ?, apellido = ?, identificacion = ?, genero = ?, \
-                 fecha_nacimiento = ?, telefono = ? \
+             SET nombre = ?, apellido = ?, cedula = ?, genero = ?, \
+                 fecha_nacimiento = ?, telefono = ?, direccion = ?, email = ? \
              WHERE paciente_id = ?',
-            [nombre, apellido, identificacion, genero, fecha_nacimiento, telefono, id]
+            [nombre, apellido, cedula, genero, fecha_nacimiento, telefono, direccion, email, id]
         );
 
         if (result.affectedRows === 0) {

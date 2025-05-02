@@ -4,10 +4,9 @@ import { pool } from "../../db.js";
 export const getAllPruebas = async (req, res) => {
     try {
         const [rows] = await pool.query(
-            'SELECT p.prueba_id, p.tipo_id, p.nombre, p.descripcion, \
-                    p.duracion, p.prioridad, p.estado \
-             FROM pruebas p \
-             ORDER BY p.nombre'
+            'SELECT pl.prueba_id, pl.nombre, pl.categoria, pl.fecha, pl.descripcion \
+             FROM pruebas_laboratorio pl \
+             ORDER BY pl.nombre'
         );
         res.json(rows);
     } catch (error) {
@@ -21,10 +20,9 @@ export const getPruebaById = async (req, res) => {
     try {
         const { id } = req.params;
         const [rows] = await pool.query(
-            'SELECT p.prueba_id, p.tipo_id, p.nombre, p.descripcion, \
-                    p.duracion, p.prioridad, p.estado \
-             FROM pruebas p \
-             WHERE p.prueba_id = ?',
+            'SELECT pl.prueba_id, pl.nombre, pl.categoria, pl.fecha, pl.descripcion \
+             FROM pruebas_laboratorio pl \
+             WHERE pl.prueba_id = ?',
             [id]
         );
 
@@ -42,12 +40,13 @@ export const getPruebaById = async (req, res) => {
 // Create new prueba
 export const createPrueba = async (req, res) => {
     try {
-        const { tipo_id, nombre, descripcion, duracion, prioridad, estado } = req.body;
+        const { nombre, categoria, descripcion } = req.body;
+        const fecha = new Date();
 
         const [result] = await pool.query(
-            'INSERT INTO pruebas (tipo_id, nombre, descripcion, duracion, prioridad, estado) \
-             VALUES (?, ?, ?, ?, ?, ?)',
-            [tipo_id, nombre, descripcion, duracion, prioridad, estado]
+            'INSERT INTO pruebas_laboratorio (nombre, categoria, fecha, descripcion) \
+             VALUES (?, ?, ?, ?)',
+            [nombre, categoria, fecha, descripcion]
         );
 
         res.status(201).json({
@@ -64,14 +63,13 @@ export const createPrueba = async (req, res) => {
 export const updatePrueba = async (req, res) => {
     try {
         const { id } = req.params;
-        const { tipo_id, nombre, descripcion, duracion, prioridad, estado } = req.body;
+        const { nombre, categoria, descripcion } = req.body;
 
         const [result] = await pool.query(
-            'UPDATE pruebas \
-             SET tipo_id = ?, nombre = ?, descripcion = ?, duracion = ?, \
-                 prioridad = ?, estado = ? \
+            'UPDATE pruebas_laboratorio \
+             SET nombre = ?, categoria = ?, descripcion = ? \
              WHERE prueba_id = ?',
-            [tipo_id, nombre, descripcion, duracion, prioridad, estado, id]
+            [nombre, categoria, descripcion, id]
         );
 
         if (result.affectedRows === 0) {
@@ -92,7 +90,7 @@ export const deletePrueba = async (req, res) => {
 
         // First check if the test exists
         const [rows] = await pool.query(
-            'SELECT prueba_id FROM pruebas WHERE prueba_id = ?',
+            'SELECT prueba_id FROM pruebas_laboratorio WHERE prueba_id = ?',
             [id]
         );
 
@@ -102,7 +100,7 @@ export const deletePrueba = async (req, res) => {
 
         // Delete the test
         const [result] = await pool.query(
-            'DELETE FROM pruebas WHERE prueba_id = ?',
+            'DELETE FROM pruebas_laboratorio WHERE prueba_id = ?',
             [id]
         );
 
@@ -118,61 +116,49 @@ export const deletePrueba = async (req, res) => {
     }
 };
 
-// Get pruebas by type
-export const getPruebasByTipo = async (req, res) => {
+// Get pruebas by category
+export const getPruebasByCategoria = async (req, res) => {
     try {
-        const { tipo_id } = req.params;
+        const { categoria } = req.params;
         const [rows] = await pool.query(
-            'SELECT p.prueba_id, p.nombre, p.descripcion, p.duracion, \
-                    p.prioridad, p.estado \
-             FROM pruebas p \
-             WHERE p.tipo_id = ? \
-             ORDER BY p.nombre',
-            [tipo_id]
+            'SELECT pl.prueba_id, pl.nombre, pl.descripcion \
+             FROM pruebas_laboratorio pl \
+             WHERE pl.categoria = ? \
+            ORDER BY pl.nombre',
+            [categoria]
         );
 
         res.json(rows);
     } catch (error) {
-        console.error('Error al obtener pruebas por tipo:', error);
-        res.status(500).json({ error: 'Error al obtener pruebas por tipo' });
+        console.error('Error al obtener pruebas por categoría:', error);
+        res.status(500).json({ error: 'Error al obtener pruebas por categoría' });
     }
 };
 
-// Get pruebas by priority
-export const getPruebasByPrioridad = async (req, res) => {
+// Get active pruebas - Since the new table doesn't have an activo field, we'll get all pruebas
+export const getPruebasActivas = async (req, res) => {
     try {
-        const { prioridad } = req.params;
         const [rows] = await pool.query(
-            'SELECT p.prueba_id, p.nombre, p.descripcion, p.duracion, \
-                    p.tipo_id, p.estado \
-             FROM pruebas p \
-             WHERE p.prioridad = ? \
-             ORDER BY p.nombre',
-            [prioridad]
+            'SELECT pl.prueba_id, pl.nombre, pl.descripcion \
+             FROM pruebas_laboratorio pl \
+             ORDER BY pl.nombre'
         );
 
         res.json(rows);
     } catch (error) {
-        console.error('Error al obtener pruebas por prioridad:', error);
-        res.status(500).json({ error: 'Error al obtener pruebas por prioridad' });
+        console.error('Error al obtener pruebas activas:', error);
+        res.status(500).json({ error: 'Error al obtener pruebas activas' });
     }
 };
 
-// Get available pruebas
+// Get available pruebas - Since the new table doesn't have an activo field or relationship with solicitudes, we'll get all pruebas
 export const getPruebasDisponibles = async (req, res) => {
     try {
         const [rows] = await pool.query(
-            'SELECT p.prueba_id, p.nombre, p.descripcion, p.duracion, \
-                    p.prioridad, p.estado \
-             FROM pruebas p \
-             WHERE p.estado = "disponible" \
-             AND p.prueba_id NOT IN \
-                 (SELECT DISTINCT sl.prueba_id \
-                  FROM solicitudes_laboratorio sl \
-                  WHERE sl.estado = "pendiente") \
-             ORDER BY p.nombre'
+            'SELECT pl.prueba_id, pl.nombre, pl.descripcion \
+             FROM pruebas_laboratorio pl \
+             ORDER BY pl.nombre'
         );
-
         res.json(rows);
     } catch (error) {
         console.error('Error al obtener pruebas disponibles:', error);
