@@ -12,6 +12,12 @@ Cada Router va a contener una parte de la api (el backend) y cada router va esta
 
 //Administracion
 
+
+import ordenCompraRoutes from "./Administracion/routes/ordenCompra.routes.js";
+import productoRoutes from "./Administracion/routes/producto.routes.js";
+import recursosRoutes from "./Administracion/routes/recursos.routes.js";
+
+
 //Citas
 
 import historialRoutes from "./Citas/routes/historial.routes.js";
@@ -113,6 +119,11 @@ app.use(stc("public"));
 */
 
 //Administracion
+
+
+app.use("/api/administracion/ordenes", ordenCompraRoutes); // Rutas para las ordenes de compra
+app.use("/api/administracion/productos", productoRoutes); // Rutas para los productos
+app.use("/api/administracion/recursos", recursosRoutes); // Rutas para los recursos
 
 //Citas
 
