@@ -4,10 +4,10 @@ import { pool } from "../../db.js";
 export const getAllExamenes = async (req, res) => {
     try {
         const [rows] = await pool.query(
-            'SELECT e.examen_id, p.nombre, p.apellido, e.fecha, e.tipo_examen, e.estado, e.resultados, e.observaciones \
-             FROM examenes_laboratorio e \
-             JOIN pacientes p ON e.paciente_id = p.paciente_id \
-             ORDER BY e.fecha DESC'
+            ` SELECT e.examen_id, p.nombre, p.apellido, e.fecha, e.tipo_examen, e.estado, e.resultados, e.observaciones 
+                FROM examenes_laboratorio e 
+             JOIN pacientes p ON e.paciente_id = p.paciente_id 
+             ORDER BY e.fecha DESC`
         );
         res.json(rows);
     } catch (error) {
@@ -21,10 +21,10 @@ export const getExamenById = async (req, res) => {
     try {
         const { id } = req.params;
         const [rows] = await pool.query(
-            'SELECT e.examen_id, e.paciente_id, p.nombre, p.apellido, e.fecha, e.tipo_examen, e.estado, e.resultados, e.observaciones \
-             FROM examenes_laboratorio e \
-             JOIN pacientes p ON e.paciente_id = p.paciente_id \
-             WHERE e.examen_id = ? ',
+           ` SELECT e.examen_id, e.paciente_id, p.nombre, p.apellido, e.fecha, e.tipo_examen, e.estado, e.resultados, e.observaciones 
+             FROM examenes_laboratorio e 
+             JOIN pacientes p ON e.paciente_id = p.paciente_id 
+             WHERE e.examen_id = ? `,
             [id]
         );
 
@@ -45,8 +45,8 @@ export const createExamen = async (req, res) => {
         const { paciente_id, fecha, tipo_examen, estado, resultados, observaciones } = req.body;
 
         const [result] = await pool.query(
-            'INSERT INTO examenes_laboratorio (paciente_id, fecha, tipo_examen, estado, resultados, observaciones) \
-             VALUES(?, ?, ?, ?, ?, ?)',
+            `INSERT INTO examenes_laboratorio (paciente_id, fecha, tipo_examen, estado, resultados, observaciones) 
+             VALUES(?, ?, ?, ?, ?, ?)`,
             [paciente_id, fecha, tipo_examen, estado, resultados, observaciones]
         );
 
@@ -67,10 +67,10 @@ export const updateExamen = async (req, res) => {
         const { paciente_id, fecha, tipo_examen, estado, resultados, observaciones } = req.body;
 
         const [result] = await pool.query(
-            'UPDATE examenes_laboratorio \
-             SET paciente_id = ?, fecha = ?, tipo_examen = ?,\
-            estado = ?, resultados = ?, observaciones = ? \
-                WHERE examen_id = ? ',
+            `UPDATE examenes_laboratorio 
+             SET paciente_id = ?, fecha = ?, tipo_examen = ?,
+            estado = ?, resultados = ?, observaciones = ? 
+                WHERE examen_id = ? `,
             [paciente_id, fecha, tipo_examen, estado, resultados, observaciones, id]
         );
 
@@ -92,7 +92,7 @@ export const deleteExamen = async (req, res) => {
 
         // First check if the exam exists
         const [rows] = await pool.query(
-            'SELECT examen_id FROM examenes_laboratorio WHERE examen_id = ?',
+            `SELECT examen_id FROM examenes_laboratorio WHERE examen_id = ?`,
             [id]
         );
 
@@ -102,7 +102,7 @@ export const deleteExamen = async (req, res) => {
 
         // Delete the exam
         const [result] = await pool.query(
-            'DELETE FROM examenes_laboratorio WHERE examen_id = ?',
+            `DELETE FROM examenes_laboratorio WHERE examen_id = ?`,
             [id]
         );
 
@@ -123,11 +123,11 @@ export const getExamenesByTipo = async (req, res) => {
     try {
         const { tipo_examen } = req.params;
         const [rows] = await pool.query(
-            'SELECT e.examen_id, p.nombre, p.apellido, e.fecha, e.tipo_examen, e.estado, e.resultados, e.observaciones \
-             FROM examenes_laboratorio e \
-             JOIN pacientes p ON e.paciente_id = p.paciente_id \
-             WHERE e.tipo_examen = ? \
-            ORDER BY e.fecha DESC',
+           ` SELECT e.examen_id, p.nombre, p.apellido, e.fecha, e.tipo_examen, e.estado, e.resultados, e.observaciones 
+             FROM examenes_laboratorio e 
+             JOIN pacientes p ON e.paciente_id = p.paciente_id 
+             WHERE e.tipo_examen = ? 
+            ORDER BY e.fecha DESC`,
             [tipo_examen]
         );
 
@@ -143,11 +143,11 @@ export const getExamenesByFecha = async (req, res) => {
     try {
         const { fecha_inicio, fecha_fin } = req.query;
         const [rows] = await pool.query(
-            'SELECT e.examen_id, p.nombre, p.apellido, e.fecha, e.tipo_examen, e.estado, e.resultados, e.observaciones \
-             FROM examenes_laboratorio e \
-             JOIN pacientes p ON e.paciente_id = p.paciente_id \
-             WHERE e.fecha BETWEEN ? AND ? \
-            ORDER BY e.fecha DESC',
+           ` SELECT e.examen_id, p.nombre, p.apellido, e.fecha, e.tipo_examen, e.estado, e.resultados, e.observaciones 
+             FROM examenes_laboratorio e 
+             JOIN pacientes p ON e.paciente_id = p.paciente_id 
+             WHERE e.fecha BETWEEN ? AND ? 
+            ORDER BY e.fecha DESC`,
             [fecha_inicio, fecha_fin]
         );
 
@@ -163,11 +163,11 @@ export const getExamenesByEstado = async (req, res) => {
     try {
         const { estado } = req.params;
         const [rows] = await pool.query(
-            'SELECT e.examen_id, p.nombre, p.apellido, e.fecha, e.tipo_examen, e.estado, e.resultados, e.observaciones \
-             FROM examenes_laboratorio e \
-             JOIN pacientes p ON e.paciente_id = p.paciente_id \
-             WHERE e.estado = ? \
-            ORDER BY e.fecha DESC',
+           ` SELECT e.examen_id, p.nombre, p.apellido, e.fecha, e.tipo_examen, e.estado, e.resultados, e.observaciones 
+             FROM examenes_laboratorio e 
+             JOIN pacientes p ON e.paciente_id = p.paciente_id 
+             WHERE e.estado = ? 
+            ORDER BY e.fecha DESC`,
             [estado]
         );
 
@@ -182,11 +182,11 @@ export const getExamenesByEstado = async (req, res) => {
 export const getExamenesPendientes = async (req, res) => {
     try {
         const [rows] = await pool.query(
-            'SELECT e.examen_id, p.nombre, p.apellido, e.fecha, e.tipo_examen, e.estado, e.resultados, e.observaciones \
-             FROM examenes_laboratorio e \
-             JOIN pacientes p ON e.paciente_id = p.paciente_id \
-             WHERE e.estado = "Pendiente" \
-             ORDER BY e.fecha ASC'
+            `SELECT e.examen_id, p.nombre, p.apellido, e.fecha, e.tipo_examen, e.estado, e.resultados, e.observaciones 
+             FROM examenes_laboratorio e 
+             JOIN pacientes p ON e.paciente_id = p.paciente_id 
+             WHERE e.estado = "Pendiente" 
+             ORDER BY e.fecha ASC`
         );
 
         res.json(rows);
