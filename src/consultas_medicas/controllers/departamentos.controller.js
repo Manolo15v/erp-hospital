@@ -1,6 +1,7 @@
-import {pool} from '../../db.js';
+import {pool} from '../config/db.js';
 
-export const getById = async(req,res)=>{//controlador para obtenr departamentos(especialdides) por id
+
+export const getById= async(req,res)=>{//controlador para obtenr departamentos(especialdides) por id
     try{
         const {id}= req.params;
         const[data]= await pool.query(
@@ -19,7 +20,7 @@ export const getById = async(req,res)=>{//controlador para obtenr departamentos(
 
 
 
-export const getByNombre = async(req,res)=>{//controlador para hacer exactamente lo mismo pero por nombre
+export const getByNombre= async(req,res)=>{//controlador para hacer exactamente lo mismo pero por nombre
     try{
         const {nombre}= req.params;
         const[data]= await pool.query(

@@ -15,26 +15,26 @@ import {
     getConsultasPendientesCount,
     crearHospitalizacion,
     upload
-} from '../controllers/consultas.controller.js';
+} from '../controllers/consultasController.js';
 
 const router = express.Router();
 
-router.get('/api/consultas', getConsultas);
-router.get('/api/consultas/completadas', getConsultasCompletada);
-router.get('/api/consultas/pendientes', getConsultasPendiente);
-router.get('/api/consultas/search', searchConsultations);
-router.get('/api/consultas/stats/total', getConsultasTotalCount);
-router.get('/api/consultas/stats/completadas', getConsultasCompletadasCount);
-router.get('/api/consultas/stats/pendientes', getConsultasPendientesCount);
-router.get('/api/consultas/:id', getConsultaById);
+router.get('/', getConsultas); 
+router.get('/completadas', getConsultasCompletada);
+router.get('/pendientes', getConsultasPendiente);
+router.get('/search', searchConsultations);
+router.get('/stats/total', getConsultasTotalCount);
+router.get('/stats/completadas', getConsultasCompletadasCount);
+router.get('/stats/pendientes', getConsultasPendientesCount);
+router.get('/:id', getConsultaById);
 
-router.post('/api/consultas', createConsulta);
-router.post('/api/consultas/:id/historia', upload.single('archivo'), createHistoria);
-router.post('/api/consultas/hospitalizacion', crearHospitalizacion);
+router.post('/', createConsulta);
+router.post('/:id/historia', upload.single('archivo'), createHistoria);
+router.post('/hospitalizacion', crearHospitalizacion);
 
-router.put('/api/consultas/:id', updateConsulta);
-router.put('/api/consultas/historia/:id', upload.single('archivo'), updateHistoria);
+router.put('/:id', updateConsulta);
+router.put('/historia/:id', upload.single('archivo'), updateHistoria);
 
-router.delete('/api/consultas/:id', deleteConsulta);
+router.delete('/:id', deleteConsulta);
 
-export default router;
+export {router};

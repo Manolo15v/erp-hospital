@@ -1,4 +1,4 @@
-import {pool} from '../../db.js';
+import {pool} from '../config/db.js';
 
 export const getAll= async(req,res)=>{//obtiene todas las citas de la tabla citas
     try{

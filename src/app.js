@@ -36,12 +36,12 @@ import utilsRoutes from "./Compras/routes/utils.routes.js"
 
 //Consultas Medicas
 
-import citasMedicasRoutes from "./Consultas_Medicas/routes/citasMedicas.routes.js";
-import consultasMedRoutes from "./Consultas_Medicas/routes/consultas.routes.js";
-import departamentosRoutes from "./Consultas_Medicas/routes/departamentos.routes.js";
-import historialMedRoutes from "./Consultas_Medicas/routes/historial.routes.js";
-import insumosRoutes from "./Consultas_Medicas/routes/insumos.routes.js";
-import pacienteMedRoutes from "./Consultas_Medicas/routes/paciente.routes.js";
+import citasMedicasRoutes from "./consultas_medicas/routes/citasMedicas.routes.js";
+import consultasMedRoutes from "./consultas_medicas/routes/consultas.routes.js";
+import departamentosRoutes from "./consultas_medicas/routes/departamentos.routes.js";
+import historialMedRoutes from "./consultas_medicas/routes/historial.routes.js";
+import insumosRoutes from "./consultas_medicas/routes/insumos.routes.js";
+import pacienteMedRoutes from "./consultas_medicas/routes/paciente.routes.js";
 
 
 

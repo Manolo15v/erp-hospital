@@ -1,4 +1,4 @@
-import { pool } from "../../db.js";
+import { pool } from "../config/db.js";
 import multer from "multer";
 import path from "path";
 
@@ -7,67 +7,67 @@ async function getConsultas(req, res) {
     try {
         const [consultas] = await pool.query(`
             SELECT 
-                cm.consulta_id,
+                cm.consulta_id as id,
                 cm.fecha_consulta,
-                p.nombre AS paciente_nombre,
-                p.apellido AS paciente_apellido,
+                CONCAT(p.nombre, ' ', p.apellido) as nombre,
                 p.paciente_id,
+                CONCAT(e.nombre, ' ', e.apellido) as medico,
                 c.cita_id,
                 c.estado,
                 c.fecha_cita,
-                hm.id AS historial_id,
-                hm.img AS historia_pdf,
-                d.nombre AS departamento_consulta
+                hm.id as id_historial,
+                CASE 
+                    WHEN hm.id IS NOT NULL THEN 'completado'
+                    ELSE 'pendiente'
+                END as estado
             FROM consultas_medicas cm
             LEFT JOIN historial_medico hm ON cm.consulta_id = hm.consulta_id
             LEFT JOIN citas_medicas_solicitudes cms ON cm.consulta_id = cms.consulta_id
             LEFT JOIN citas c ON cms.cita_id = c.cita_id
             JOIN pacientes p ON cm.paciente_id = p.paciente_id
-            JOIN departamentos d ON cm.departamento_id = d.departamento_id
+            JOIN empleados e ON cm.medico_id = e.empleado_id
             ORDER BY cm.fecha_consulta DESC
         `);
 
-        res.json({ data: consultas });
+        console.log('Consultas obtenidas:', consultas); // Para debug
+        res.json( {data:consultas});
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error en getConsultas:', error);
+        res.status(500).json({ 
+            error: 'Error al obtener consultas',
+            details: error.message 
+        });
     }
 }
 
 // Crear una nueva consulta
 async function createConsulta(req, res) {
     try {
-        const { paciente_id, cita_id, fecha_consulta, departamento_id } = req.body;
+        const { paciente_id, medico_id, fecha_consulta, historial_id } = req.body;
         
+        if (!paciente_id || !medico_id || !fecha_consulta) {
+            return res.status(400).json({ error: "Faltan campos requeridos" });
+        }
+
         const [consultaResult] = await pool.query(
             `INSERT INTO consultas_medicas 
-             (paciente_id, medico_id, departamento_id, fecha_consulta) 
+             (paciente_id, medico_id, fecha_consulta, historial_id) 
              VALUES (?, ?, ?, ?)`,
-            [paciente_id, 1, departamento_id, fecha_consulta || new Date()]
+            [paciente_id, medico_id, fecha_consulta, historial_id || null]
         );
         
-        const consulta_id = consultaResult.insertId;
-        
-        if (cita_id) {
-            await pool.query(
-                "INSERT INTO citas_medicas_solicitudes (consulta_id, cita_id) VALUES (?, ?)",
-                [consulta_id, cita_id]
-            );
-            
-            await pool.query(
-                "UPDATE citas SET estado = 'pendiente' WHERE cita_id = ?",
-                [cita_id]
-            );
-        }
-        
         res.status(201).json({ 
-            consulta_id,
+            consulta_id: consultaResult.insertId,
             message: "Consulta creada exitosamente"
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error en createConsulta:', error);
+        res.status(500).json({ 
+            error: "Error al crear la consulta",
+            details: error.message 
+        });
     }
 }
-
 // Obtener consultas completadas
 async function getConsultasCompletada(req, res) {
     try {

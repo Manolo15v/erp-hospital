@@ -1,4 +1,4 @@
-import { pool } from '../../db.js';
+import { pool } from '../config/db.js';
 
 
 export const getAllPacientes = async (req, res) => {//obtiene todos los pacientes que esten en la base de datos
@@ -13,6 +13,18 @@ export const getAllPacientes = async (req, res) => {//obtiene todos los paciente
     }
 };
 
+export const getAllMedicos = async (req, res) => {//obtiene todos los pacientes que esten en la base de datos
+    try {
+        const [data] = await pool.query(`SELECT * FROM empleados`);
+        if (!data || data.length === 0) {
+            return res.status(404).json({ error: "No se encontraron empleados registrados." });
+        }
+        res.status(200).json(data);
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+};
+
 export const getPacienteById = async (req, res) => { //obtiene pacientes por id(cedula)
     try {
         const { id } = req.params;
@@ -20,6 +32,21 @@ export const getPacienteById = async (req, res) => { //obtiene pacientes por id(
 
         if (!data || data.length === 0) {
             return res.status(404).json({ error: "Paciente no encontrado." });
+        }
+
+        res.status(200).json(data[0]);
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+};
+
+export const getPacienteByCedula = async (req, res) => {
+    try {
+        const { cedula } = req.params;
+        const [data] = await pool.query(`SELECT * FROM pacientes WHERE cedula = ?`, [cedula]);
+
+        if (!data || data.length === 0) {
+            return res.status(404).json(null);
         }
 
         res.status(200).json(data[0]);

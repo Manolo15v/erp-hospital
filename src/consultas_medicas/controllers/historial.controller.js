@@ -1,4 +1,4 @@
-import { pool } from "../../db.js";
+import { pool } from "../config/db.js";
 import multer from "multer";
 import path from "path";
 
@@ -24,7 +24,7 @@ async function getHistorias(req, res) {
             ORDER BY hm.fecha_registro DESC
         `);
         
-        res.json({ data: rows });
+        res.json({ rows });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
