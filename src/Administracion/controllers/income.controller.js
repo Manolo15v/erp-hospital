@@ -30,82 +30,149 @@ export const getById= async(req,res)=>{//controlador para obtener ingresos por i
 };
 
 
-export const createIncome= async(req,res)=>{//controlador para crear ingresos, igual que en app.js
-    try{
-        const {fecha_ingreso, tipo_ingreso, monto, descripcion, fuente}= req.body;
+export const createIncome = async (req, res) => {
+  try {
+      const {
+        monto,
+        descripcion,
+          tipo_ingreso,
+          emisor,
+          fecha,
+          moneda,
+          tipo_emisor,
+          emisor_id
+      } = req.body;
+      console.log(req.body)
 
-        if(!fecha_ingreso||!tipo_ingreso||!monto||!descripcion||!fuente){
-            return res.status(400).json({error: "faltan campos obligatorios."});
-        }
+      // Insertar en la base de datos
+      const [data] = await pool.query(
+          `
+          INSERT INTO ingresos (
+              cantidad,
+              concepto,
+              tipo_ingreso,
+              contribuyente,
+              fecha,
+              moneda,
+              tipo_contribuyente,
+              identificacion_contribuyente
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+          `,
+          [
+            monto,
+            descripcion,
+              tipo_ingreso,
+              emisor,
+              fecha,
+              moneda,
+              tipo_emisor || null, 
+              emisor_id || null  
+          ]
+      );
 
-        const [data]= await pool.query(
-            `
-            INSERT INTO ingresos (fecha_ingreso, tipo_ingreso, monto, descripcion, fuente)
-            VALUES (?, ?, ?, ?, ?)
-            `, [fecha_ingreso,tipo_ingreso,monto,descripcion,fuente]
-        );
 
-        res.status(200).json({
-            message: "Ingreso creado exitosamente.",
-            id: data.insertId,
-            ingreso: {fecha_ingreso,tipo_ingreso,monto,descripcion,fuente},
-        });
+      res.status(201).json({
+          message: "Ingreso creado exitosamente.",
+          ingreso: {
+              ingresos_id: data.insertId,
+              monto,
+              descripcion,
+                tipo_ingreso,
+                emisor,
+                fecha,
+                moneda,
+                tipo_emisor ,
+                emisor_id
+          }
+      });
 
-    }catch(error){
-        return res.status(500).json({error: error.message});
-    }
+  } catch (error) {
+      console.error("Error al crear ingreso:", error);
+      res.status(500).json({ error: "Error interno del servidor." });
+  }
 };
 
 
 
-export const updateIncome = async (req, res) => {//actualiza ingreso, me imagino que para el estado
-
-  const { id, fecha_ingreso, tipo_ingreso, monto, descripcion, fuente } = req.body;
-
-  if (!id || !fecha_ingreso || !tipo_ingreso || !monto || !descripcion || !fuente) {
-    return res.status(400).json({ error: "Todos los campos son requeridos." });
-  }
+export const updateIncome = async (req, res) => {
   try {
-    const [result] = await pool.query(
-      `
-      UPDATE ingresos 
-      SET fecha_ingreso = ?, 
-          tipo_ingreso = ?, 
-          monto = ?, 
-          descripcion = ?, 
-          fuente = ?
-      WHERE id_ingreso = ?
-      `,
-      [
-        fecha_ingreso,
-        tipo_ingreso,
+      const {
         monto,
         descripcion,
-        fuente,
-        id
-      ]
-    );
+          tipo_ingreso,
+          emisor,
+          fecha,
+          moneda,
+          tipo_emisor,
+          emisor_id,
+          id
+      } = req.body;
 
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: "No se encontró el ingreso con el ID especificado." });
-    }
 
-    res.status(200).json({
-      message: "Ingreso actualizado exitosamente.",
-      result
-    });
+     
+      const [existingIncome] = await pool.query(
+          'SELECT * FROM ingresos WHERE ingresos_id = ?', 
+          [id]
+      );
+
+      if (existingIncome.length === 0) {
+          return res.status(404).json({ error: "Ingreso no encontrado." });
+      }
+
+
+      await pool.query(
+          `
+          UPDATE ingresos SET
+              cantidad = ?,
+              concepto = ?,
+              tipo_ingreso = ?,
+              contribuyente = ?,
+              fecha = ?,
+              moneda = ?,
+              tipo_contribuyente = ?,
+              identificacion_contribuyente = ?
+          WHERE ingresos_id = ?
+          `,
+          [
+            monto,
+            descripcion,
+              tipo_ingreso,
+              emisor,
+              fecha,
+              moneda,
+              tipo_emisor || null,
+              emisor_id || null  ,
+              id
+          ]
+      );
+
+      // Respuesta exitosa
+      res.status(200).json({
+          message: "Ingreso actualizado exitosamente.",
+          ingreso: {
+              ingresos_id: id,
+              monto,
+              descripcion,
+                tipo_ingreso,
+                emisor,
+                fecha,
+                moneda,
+                tipo_emisor ,
+                emisor_id
+          }
+      });
+
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ error: error.message });
+      console.error("Error al actualizar ingreso:", error);
+      res.status(500).json({ error: "Error interno del servidor." });
   }
 };
 
 export const deleteIncome = async (req, res) => {//elimina ingreso por id
   const id = parseInt(req.params.id);
-
   try {
     const [result] = await pool.query(
-      `DELETE FROM ingresos WHERE id_ingreso = ?`,
+      `DELETE FROM ingresos WHERE ingresos_id = ?`,
       [id]
     );
 
