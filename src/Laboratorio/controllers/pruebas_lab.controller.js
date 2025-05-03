@@ -4,9 +4,9 @@ import { pool } from "../../db.js";
 export const getAllPruebas = async (req, res) => {
     try {
         const [rows] = await pool.query(
-            'SELECT pl.prueba_id, pl.nombre, pl.categoria, pl.fecha, pl.descripcion \
-             FROM pruebas_laboratorio pl \
-             ORDER BY pl.nombre'
+            `SELECT pl.prueba_id, pl.nombre, pl.categoria, pl.fecha, pl.descripcion 
+             FROM pruebas_laboratorio pl 
+             ORDER BY pl.nombre`
         );
         res.json(rows);
     } catch (error) {
@@ -20,9 +20,9 @@ export const getPruebaById = async (req, res) => {
     try {
         const { id } = req.params;
         const [rows] = await pool.query(
-            'SELECT pl.prueba_id, pl.nombre, pl.categoria, pl.fecha, pl.descripcion \
-             FROM pruebas_laboratorio pl \
-             WHERE pl.prueba_id = ?',
+            `SELECT pl.prueba_id, pl.nombre, pl.categoria, pl.fecha, pl.descripcion 
+             FROM pruebas_laboratorio pl 
+             WHERE pl.prueba_id = ?`,
             [id]
         );
 
@@ -44,8 +44,8 @@ export const createPrueba = async (req, res) => {
         const fecha = new Date();
 
         const [result] = await pool.query(
-            'INSERT INTO pruebas_laboratorio (nombre, categoria, fecha, descripcion) \
-             VALUES (?, ?, ?, ?)',
+            `INSERT INTO pruebas_laboratorio (nombre, categoria, fecha, descripcion) 
+             VALUES (?, ?, ?, ?)`,
             [nombre, categoria, fecha, descripcion]
         );
 
@@ -66,9 +66,9 @@ export const updatePrueba = async (req, res) => {
         const { nombre, categoria, descripcion } = req.body;
 
         const [result] = await pool.query(
-            'UPDATE pruebas_laboratorio \
-             SET nombre = ?, categoria = ?, descripcion = ? \
-             WHERE prueba_id = ?',
+           ` UPDATE pruebas_laboratorio 
+             SET nombre = ?, categoria = ?, descripcion = ? 
+             WHERE prueba_id = ?`,
             [nombre, categoria, descripcion, id]
         );
 
@@ -90,7 +90,7 @@ export const deletePrueba = async (req, res) => {
 
         // First check if the test exists
         const [rows] = await pool.query(
-            'SELECT prueba_id FROM pruebas_laboratorio WHERE prueba_id = ?',
+            `SELECT prueba_id FROM pruebas_laboratorio WHERE prueba_id = ?`,
             [id]
         );
 
@@ -100,7 +100,7 @@ export const deletePrueba = async (req, res) => {
 
         // Delete the test
         const [result] = await pool.query(
-            'DELETE FROM pruebas_laboratorio WHERE prueba_id = ?',
+            `DELETE FROM pruebas_laboratorio WHERE prueba_id = ?`,
             [id]
         );
 
@@ -121,10 +121,10 @@ export const getPruebasByCategoria = async (req, res) => {
     try {
         const { categoria } = req.params;
         const [rows] = await pool.query(
-            'SELECT pl.prueba_id, pl.nombre, pl.descripcion \
-             FROM pruebas_laboratorio pl \
-             WHERE pl.categoria = ? \
-            ORDER BY pl.nombre',
+            `SELECT pl.prueba_id, pl.nombre, pl.descripcion 
+             FROM pruebas_laboratorio pl 
+             WHERE pl.categoria = ? 
+            ORDER BY pl.nombre`,
             [categoria]
         );
 
@@ -139,9 +139,9 @@ export const getPruebasByCategoria = async (req, res) => {
 export const getPruebasActivas = async (req, res) => {
     try {
         const [rows] = await pool.query(
-            'SELECT pl.prueba_id, pl.nombre, pl.descripcion \
-             FROM pruebas_laboratorio pl \
-             ORDER BY pl.nombre'
+            `SELECT pl.prueba_id, pl.nombre, pl.descripcion 
+             FROM pruebas_laboratorio pl 
+             ORDER BY pl.nombre`
         );
 
         res.json(rows);
@@ -155,9 +155,9 @@ export const getPruebasActivas = async (req, res) => {
 export const getPruebasDisponibles = async (req, res) => {
     try {
         const [rows] = await pool.query(
-            'SELECT pl.prueba_id, pl.nombre, pl.descripcion \
-             FROM pruebas_laboratorio pl \
-             ORDER BY pl.nombre'
+            `SELECT pl.prueba_id, pl.nombre, pl.descripcion 
+             FROM pruebas_laboratorio pl 
+             ORDER BY pl.nombre`
         );
         res.json(rows);
     } catch (error) {
