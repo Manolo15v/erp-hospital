@@ -4,9 +4,9 @@ import { pool } from "../../db.js";
 export const getAllPacientes = async (req, res) => {
     try {
         const [rows] = await pool.query(
-            'SELECT p.paciente_id, p.nombre, p.apellido, p.cedula, \
-                    p.fecha_nacimiento, p.genero, p.telefono, p.direccion, p.email \
-             FROM pacientes p'
+            `SELECT p.paciente_id, p.nombre, p.apellido, p.cedula, 
+                    p.fecha_nacimiento, p.genero, p.telefono, p.direccion, p.email 
+             FROM pacientes p`
         );
         res.json(rows);
     } catch (error) {
@@ -20,10 +20,10 @@ export const getPacienteById = async (req, res) => {
     try {
         const { id } = req.params;
         const [rows] = await pool.query(
-            'SELECT p.paciente_id, p.nombre, p.apellido, p.cedula, \
-                    p.fecha_nacimiento, p.genero, p.telefono, p.direccion, p.email \
-             FROM pacientes p \
-             WHERE p.paciente_id = ?',
+            `SELECT p.paciente_id, p.nombre, p.apellido, p.cedula, 
+                    p.fecha_nacimiento, p.genero, p.telefono, p.direccion, p.email 
+             FROM pacientes p 
+             WHERE p.paciente_id = ?`,
             [id]
         );
 
@@ -44,8 +44,8 @@ export const createPaciente = async (req, res) => {
         const { nombre, apellido, cedula, genero, fecha_nacimiento, telefono, direccion, email } = req.body;
 
         const [result] = await pool.query(
-            'INSERT INTO pacientes (nombre, apellido, cedula, genero, fecha_nacimiento, telefono, direccion, email) \
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            `INSERT INTO pacientes (nombre, apellido, cedula, genero, fecha_nacimiento, telefono, direccion, email) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
             [nombre, apellido, cedula, genero, fecha_nacimiento, telefono, direccion, email]
         );
 
@@ -69,10 +69,10 @@ export const updatePaciente = async (req, res) => {
         const { nombre, apellido, cedula, genero, fecha_nacimiento, telefono, direccion, email } = req.body;
 
         const [result] = await pool.query(
-            'UPDATE pacientes \
-             SET nombre = ?, apellido = ?, cedula = ?, genero = ?, \
-                 fecha_nacimiento = ?, telefono = ?, direccion = ?, email = ? \
-             WHERE paciente_id = ?',
+            `UPDATE pacientes 
+             SET nombre = ?, apellido = ?, cedula = ?, genero = ?, 
+                 fecha_nacimiento = ?, telefono = ?, direccion = ?, email = ? 
+             WHERE paciente_id = ?`,
             [nombre, apellido, cedula, genero, fecha_nacimiento, telefono, direccion, email, id]
         );
 
@@ -94,7 +94,7 @@ export const deletePaciente = async (req, res) => {
 
         // First check if the patient exists
         const [rows] = await pool.query(
-            'SELECT paciente_id FROM pacientes WHERE paciente_id = ?',
+            `SELECT paciente_id FROM pacientes WHERE paciente_id = ?`,
             [id]
         );
 
@@ -104,7 +104,7 @@ export const deletePaciente = async (req, res) => {
 
         // Delete the patient
         const [result] = await pool.query(
-            'DELETE FROM pacientes WHERE paciente_id = ?',
+            `DELETE FROM pacientes WHERE paciente_id = ?`,
             [id]
         );
 
@@ -125,12 +125,12 @@ export const getPacienteHistorial = async (req, res) => {
     try {
         const { id } = req.params;
         const [rows] = await pool.query(
-            'SELECT sl.solicitud_id, sl.fecha_solicitud, sl.estado, sl.observacion, \
-                    tp.nombre as prueba, tp.descripcion \
-             FROM solicitudes_laboratorio sl \
-             INNER JOIN tipo_prueba tp ON sl.tipo_id = tp.tipo_id \
-             WHERE sl.paciente_id = ? \
-             ORDER BY sl.fecha_solicitud DESC',
+            `SELECT sl.solicitud_id, sl.fecha_solicitud, sl.estado, sl.observacion, 
+                    tp.nombre as prueba, tp.descripcion 
+             FROM solicitudes_laboratorio sl 
+             INNER JOIN tipo_prueba tp ON sl.tipo_id = tp.tipo_id 
+             WHERE sl.paciente_id = ? 
+             ORDER BY sl.fecha_solicitud DESC`,
             [id]
         );
 
@@ -146,12 +146,12 @@ export const getPacienteResultados = async (req, res) => {
     try {
         const { id } = req.params;
         const [rows] = await pool.query(
-            'SELECT rl.parametro, rl.valor, rl.rango_referencial, rl.unidad, \
-                    sl.fecha_resultados, sl.observacion \
-             FROM resultados_laboratorio rl \
-             INNER JOIN solicitudes_laboratorio sl ON rl.solicitud_id = sl.solicitud_id \
-             WHERE sl.paciente_id = ? \
-             ORDER BY sl.fecha_resultados DESC',
+            `SELECT rl.parametro, rl.valor, rl.rango_referencial, rl.unidad, 
+                    sl.fecha_resultados, sl.observacion 
+             FROM resultados_laboratorio rl 
+             INNER JOIN solicitudes_laboratorio sl ON rl.solicitud_id = sl.solicitud_id 
+             WHERE sl.paciente_id = ? 
+             ORDER BY sl.fecha_resultados DESC`,
             [id]
         );
 

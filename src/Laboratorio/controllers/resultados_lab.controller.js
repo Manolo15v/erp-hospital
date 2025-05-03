@@ -123,11 +123,11 @@ export const getResultadosByTipo = async (req, res) => {
 export const getResultadosByFilters = async (req, res) => {
     try {
         const { nombre, apellido, cedula, start, end, estado, tipo_examen } = req.query;
-        let query = 'SELECT DISTINCT e.examen_id, p.nombre, p.apellido, p.cedula, e.fecha as fecha_examen, \
-                    e.tipo_examen, e.estado, e.resultados, e.observaciones \
-             FROM examenes_laboratorio e \
-             JOIN pacientes p ON e.paciente_id = p.paciente_id \
-             WHERE 1=1';
+        let query = `SELECT DISTINCT e.examen_id, p.nombre, p.apellido, p.cedula, e.fecha as fecha_examen, 
+                    e.tipo_examen, e.estado, e.resultados, e.observaciones 
+             FROM examenes_laboratorio e 
+             JOIN pacientes p ON e.paciente_id = p.paciente_id 
+             WHERE 1=1`;
 
         const params = [];
 
@@ -158,9 +158,9 @@ export const getResultadosByFilters = async (req, res) => {
 
         // Get all pruebas
         const [pruebas] = await pool.query(
-            'SELECT pl.prueba_id, pl.nombre as tipo_examen, pl.categoria \
-             FROM pruebas_laboratorio pl \
-             ORDER BY pl.nombre'
+            `SELECT pl.prueba_id, pl.nombre as tipo_examen, pl.categoria 
+             FROM pruebas_laboratorio pl 
+             ORDER BY pl.nombre`
         );
 
         // Map examenes with their types

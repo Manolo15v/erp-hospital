@@ -106,6 +106,8 @@ Hacer la navegacion desde el front hacia las carpeta pages en un futuro
 
 */
 
+import loginRoutes from "./Inicio/routes/login.routes.js"
+
 const app = express();
 
 // Middlewares
@@ -212,6 +214,8 @@ app.use("/api/personal/pagos_empleados", pagosEmpleadosRoutes);
 
 //Usuarios
 app.use("/api/usuarios", usuariosRoutes);
+
+app.use("/api/iniciar",loginRoutes)
 
 // Middleware para manejar rutas no encontradas
 app.use((req, res, next) => {
