@@ -133,6 +133,7 @@ CREATE TABLE IF NOT EXISTS `pruebas_laboratorio` (
   `nombre` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `categoria` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `fecha` datetime DEFAULT NULL,
+  `resultados` text COLLATE utf8mb4_general_ci,
   `descripcion` text COLLATE utf8mb4_general_ci,
   PRIMARY KEY (`prueba_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

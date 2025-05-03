@@ -4,7 +4,7 @@ import { pool } from "../../db.js";
 export const getAllPruebas = async (req, res) => {
     try {
         const [rows] = await pool.query(
-            'SELECT pl.prueba_id, pl.nombre, pl.categoria, pl.fecha, pl.descripcion \
+            'SELECT pl.prueba_id, pl.nombre, pl.categoria, pl.fecha, pl.descripcion, pl.resultados \
              FROM pruebas_laboratorio pl \
              ORDER BY pl.nombre'
         );
@@ -20,7 +20,7 @@ export const getPruebaById = async (req, res) => {
     try {
         const { id } = req.params;
         const [rows] = await pool.query(
-            'SELECT pl.prueba_id, pl.nombre, pl.categoria, pl.fecha, pl.descripcion \
+            'SELECT pl.prueba_id, pl.nombre, pl.categoria, pl.fecha, pl.descripcion, pl.resultados \
              FROM pruebas_laboratorio pl \
              WHERE pl.prueba_id = ?',
             [id]
@@ -37,16 +37,39 @@ export const getPruebaById = async (req, res) => {
     }
 };
 
+// Función para generar un valor aleatorio basado en la categoría
+function generateRandomValue(categoria) {
+    const min = 0;
+    const max = 100;
+    const middle = (max - min) / 2;
+
+    switch (categoria) {
+        case "Sangre":
+            return Math.round((Math.random() * (max - middle) + middle) * 100) / 100;
+        case "Orina":
+            return Math.round((Math.random() * (middle - min) + min) * 100) / 100;
+        case "Microbiología":
+            return Math.round((Math.random() * (max - min) + min) * 100) / 100;
+        case "Bioquímica":
+            return Math.round((Math.random() * (middle - min) + min) * 100) / 100;
+        case "Otras":
+            return Math.round((Math.random() * (max - min) + min) * 100) / 100;
+        default:
+            return Math.round((Math.random() * (max - min) + min) * 100) / 100;
+    }
+}
+
 // Create new prueba
 export const createPrueba = async (req, res) => {
     try {
         const { nombre, categoria, descripcion } = req.body;
         const fecha = new Date();
+        const resultados = generateRandomValue(categoria);
 
         const [result] = await pool.query(
-            'INSERT INTO pruebas_laboratorio (nombre, categoria, fecha, descripcion) \
-             VALUES (?, ?, ?, ?)',
-            [nombre, categoria, fecha, descripcion]
+            'INSERT INTO pruebas_laboratorio (nombre, categoria, fecha, descripcion, resultados) \
+             VALUES (?, ?, ?, ?, ?)',
+            [nombre, categoria, fecha, descripcion, resultados]
         );
 
         res.status(201).json({
@@ -65,11 +88,12 @@ export const updatePrueba = async (req, res) => {
         const { id } = req.params;
         const { nombre, categoria, descripcion } = req.body;
 
+        const fecha = new Date();
         const [result] = await pool.query(
             'UPDATE pruebas_laboratorio \
-             SET nombre = ?, categoria = ?, descripcion = ? \
-             WHERE prueba_id = ?',
-            [nombre, categoria, descripcion, id]
+             SET nombre = ?, categoria = ?, descripcion = ?, fecha = ?\
+              WHERE prueba_id = ?',
+            [nombre, categoria, descripcion, fecha, id]
         );
 
         if (result.affectedRows === 0) {
@@ -121,7 +145,7 @@ export const getPruebasByCategoria = async (req, res) => {
     try {
         const { categoria } = req.params;
         const [rows] = await pool.query(
-            'SELECT pl.prueba_id, pl.nombre, pl.descripcion \
+            'SELECT pl.prueba_id, pl.nombre, pl.descripcion, pl.resultados \
              FROM pruebas_laboratorio pl \
              WHERE pl.categoria = ? \
             ORDER BY pl.nombre',
@@ -139,7 +163,7 @@ export const getPruebasByCategoria = async (req, res) => {
 export const getPruebasActivas = async (req, res) => {
     try {
         const [rows] = await pool.query(
-            'SELECT pl.prueba_id, pl.nombre, pl.descripcion \
+            'SELECT pl.prueba_id, pl.nombre, pl.descripcion, pl.resultados \
              FROM pruebas_laboratorio pl \
              ORDER BY pl.nombre'
         );
@@ -155,7 +179,7 @@ export const getPruebasActivas = async (req, res) => {
 export const getPruebasDisponibles = async (req, res) => {
     try {
         const [rows] = await pool.query(
-            'SELECT pl.prueba_id, pl.nombre, pl.descripcion \
+            'SELECT pl.prueba_id, pl.nombre, pl.descripcion, pl.resultados \
              FROM pruebas_laboratorio pl \
              ORDER BY pl.nombre'
         );
